@@ -19,7 +19,12 @@ export default {
           });
         }
         
-        const weather = await getWeatherByCoords(lat, lon);
+        // 从 Cookie 中获取语言偏好
+        const cookie = request.headers.get('cookie') || '';
+        const langMatch = cookie.match(/preferred_lang=([^;]+)/);
+        const lang = (langMatch && ['zh', 'en', 'ja', 'ko'].includes(langMatch[1])) ? langMatch[1] : 'en';
+        
+        const weather = await getWeatherByCoords(lat, lon, lang);
         const locationCookie = `user_location=${lat},${lon}; path=/; max-age=3600; samesite=lax`;
         
         return new Response(JSON.stringify({
@@ -126,12 +131,12 @@ export default {
       
       if (locationMatch) {
         const [lat, lon] = locationMatch[1].split(',').map(Number);
-        weather = await getWeatherByCoords(lat, lon);
+        weather = await getWeatherByCoords(lat, lon, lang);
         weather.isDefault = false;
       } else {
         const defaultLat = parseFloat(env?.WEATHER_LAT) || 35.77;
         const defaultLon = parseFloat(env?.WEATHER_LON) || 140.32;
-        weather = await getWeatherByCoords(defaultLat, defaultLon);
+        weather = await getWeatherByCoords(defaultLat, defaultLon, lang);
         weather.isDefault = true;
       }
       
@@ -159,7 +164,8 @@ export default {
           "cache-control": "public, max-age=300, stale-while-revalidate=60",
           "x-content-type-options": "nosniff",
           "x-frame-options": "DENY",
-          "content-language": lang
+          "content-language": lang,
+          "content-security-policy": "default-src 'self'; script-src 'unsafe-inline' 'unsafe-eval'; style-src 'unsafe-inline'; img-src data: https:; connect-src 'self' https://api.open-meteo.com; frame-ancestors 'none'"
         }
       });
 
@@ -482,7 +488,43 @@ function getIP(request) {
   };
 }
 
-async function getWeatherByCoords(lat, lon) {
+// ======================================================
+// 修改天气描述函数，支持多语言
+// ======================================================
+
+function getWeatherDescription(code, lang = 'en') {
+  const t = i18n[lang] || i18n.en;
+  const descriptions = {
+    0: t.weather.clear,
+    1: t.weather.mostlyClear,
+    2: t.weather.partlyCloudy,
+    3: t.weather.cloudy,
+    45: t.weather.foggy,
+    48: t.weather.foggy,
+    51: t.weather.lightRain,
+    53: t.weather.moderateRain,
+    55: t.weather.heavyRain,
+    61: t.weather.lightRain,
+    63: t.weather.moderateRain,
+    65: t.weather.heavyRain,
+    71: t.weather.lightSnow,
+    73: t.weather.moderateSnow,
+    75: t.weather.heavySnow,
+    80: t.weather.rainShower,
+    81: t.weather.rainShower,
+    82: t.weather.rainShower,
+    95: t.weather.thunderstorm,
+    96: t.weather.thunderstorm,
+    99: t.weather.thunderstorm
+  };
+  return descriptions[code] || t.weather.updating;
+}
+
+// ======================================================
+// 修改天气获取函数，支持多语言
+// ======================================================
+
+async function getWeatherByCoords(lat, lon, lang = 'en') {
   try {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 5000);
@@ -510,11 +552,11 @@ async function getWeatherByCoords(lat, lon) {
     }
     
     const w = data.current_weather;
-    const locationName = await getLocationName(lat, lon);
+    const locationName = await getLocationName(lat, lon, lang);
     
     return {
       temp: Math.round(w.temperature) + "°C",
-      desc: getWeatherDescription(w.weathercode),
+      desc: getWeatherDescription(w.weathercode, lang),
       icon: getWeatherIcon(w.weathercode, w.temperature),
       windspeed: w.windspeed || 0,
       weathercode: w.weathercode,
@@ -526,10 +568,10 @@ async function getWeatherByCoords(lat, lon) {
     
   } catch (e) {
     console.error('Weather fetch failed:', e.message);
-    
+    const t = i18n[lang] || i18n.en;
     return {
       temp: "--",
-      desc: "Weather service temporarily unavailable",
+      desc: t.weather.unavailable,
       icon: "⛅",
       windspeed: 0,
       weathercode: -1,
@@ -541,9 +583,22 @@ async function getWeatherByCoords(lat, lon) {
   }
 }
 
-async function getLocationName(lat, lon) {
+// ======================================================
+// 获取位置名称（支持多语言）
+// ======================================================
+
+async function getLocationName(lat, lon, lang = 'en') {
   try {
-    const url = `https://geocoding-api.open-meteo.com/v1/search?latitude=${lat}&longitude=${lon}&count=1&language=en`;
+    // 根据语言选择不同的API参数
+    const languageMap = {
+      'zh': 'zh',
+      'en': 'en',
+      'ja': 'ja',
+      'ko': 'ko'
+    };
+    const language = languageMap[lang] || 'en';
+    
+    const url = `https://geocoding-api.open-meteo.com/v1/search?latitude=${lat}&longitude=${lon}&count=1&language=${language}`;
     const res = await fetch(url);
     const data = await res.json();
     
@@ -576,20 +631,6 @@ function getWeatherIcon(code, temp) {
   };
   
   return icons[code] || "🌤️";
-}
-
-function getWeatherDescription(code) {
-  const descriptions = {
-    0: "Clear", 1: "Mostly Clear", 2: "Partly Cloudy", 3: "Cloudy",
-    45: "Foggy", 48: "Foggy",
-    51: "Light Rain", 53: "Moderate Rain", 55: "Heavy Rain",
-    61: "Light Rain", 63: "Moderate Rain", 65: "Heavy Rain",
-    71: "Light Snow", 73: "Moderate Snow", 75: "Heavy Snow",
-    80: "Rain Shower", 81: "Rain Shower", 82: "Rain Shower",
-    95: "Thunderstorm", 96: "Thunderstorm", 99: "Thunderstorm"
-  };
-  
-  return descriptions[code] || "Weather data updating";
 }
 
 function getQuote(lang) {
