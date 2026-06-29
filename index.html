@@ -3,30 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edge Homepage - 云端个人主页</title>
+    <title>Edge Homepage · 云端个人主页</title>
     <style>
-        :root {
-            --bg-color: #0b0d14;
-            --text-color: #fff;
-            --card-bg: rgba(255,255,255,0.03);
-            --card-border: rgba(255,255,255,0.05);
-            --input-bg: rgba(255,255,255,0.06);
-            --input-border: rgba(255,255,255,0.08);
-            --link-color: rgba(255,255,255,0.4);
-            --link-hover: #fff;
-            --text-secondary: rgba(255,255,255,0.5);
-            --text-muted: rgba(255,255,255,0.3);
-            --gradient-text: linear-gradient(135deg, #fff 0%, #8899bb 100%);
-        }
-        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
+        :root {
+            --bg-color: #0b0d14;
+            --text-color: #f0f3fa;
+            --card-bg: rgba(255, 255, 255, 0.04);
+            --card-border: rgba(255, 255, 255, 0.07);
+            --input-bg: rgba(255, 255, 255, 0.05);
+            --input-border: rgba(255, 255, 255, 0.1);
+            --link-color: rgba(255, 255, 255, 0.45);
+            --link-hover: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.55);
+            --text-muted: rgba(255, 255, 255, 0.25);
+            --gradient-text: linear-gradient(135deg, #f0f3fa 0%, #9bb0d9 100%);
+            --shadow-glow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            --radius-lg: 24px;
+            --radius-md: 16px;
+            --radius-sm: 12px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: var(--bg-color);
             color: var(--text-color);
             min-height: 100vh;
@@ -35,320 +40,470 @@
             align-items: center;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
+            padding: 20px;
+            position: relative;
         }
-        
+
+        /* 动态背景 */
         .bg {
             position: fixed;
             inset: 0;
-            background: radial-gradient(circle at 20% 30%, #1a2233, transparent 60%),
-                        radial-gradient(circle at 80% 20%, #151a2a, transparent 60%),
-                        radial-gradient(circle at 50% 80%, #0f1420, transparent 50%),
+            z-index: -2;
+            background: radial-gradient(circle at 20% 30%, #1f2a40, transparent 55%),
+                        radial-gradient(circle at 80% 20%, #1a2335, transparent 55%),
+                        radial-gradient(circle at 50% 80%, #0f1625, transparent 50%),
                         var(--bg-color);
-            z-index: -1;
         }
-        
+
+        .bg-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.25;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .bg-orb:nth-child(1) {
+            width: 500px;
+            height: 500px;
+            top: -100px;
+            right: -100px;
+            background: #4a6fa5;
+        }
+
+        .bg-orb:nth-child(2) {
+            width: 400px;
+            height: 400px;
+            bottom: -50px;
+            left: -50px;
+            background: #7c5cbf;
+        }
+
         .container {
             width: 100%;
-            max-width: 1000px;
-            padding: 40px;
-            animation: fadeIn .6s ease-out;
+            max-width: 1060px;
+            margin: 0 auto;
+            animation: fadeIn .7s ease-out;
             position: relative;
-            z-index: 1;
+            z-index: 2;
         }
-        
+
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
+            from { opacity: 0; transform: translateY(24px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        
+
         @keyframes slideUp {
             from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-6px); }
+        }
+
+        /* 顶部区域 */
         .top {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            margin-bottom: 40px;
+            margin-bottom: 36px;
             animation: slideUp .6s ease-out;
+            flex-wrap: wrap;
+            gap: 24px;
         }
-        
+
         .time-section {
             position: relative;
         }
-        
+
         .time {
-            font-size: 72px;
+            font-size: 80px;
             font-weight: 700;
-            letter-spacing: -2px;
+            letter-spacing: -3px;
             background: var(--gradient-text);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             line-height: 1;
-            transition: all .5s;
+            transition: var(--transition);
+            display: flex;
+            align-items: baseline;
+            gap: 4px;
         }
-        
+
         .time-seconds {
-            font-size: 24px;
-            opacity: 0.4;
-            margin-left: 8px;
+            font-size: 26px;
+            font-weight: 300;
+            opacity: 0.35;
             -webkit-text-fill-color: var(--text-secondary);
+            letter-spacing: 0;
         }
-        
+
         .date {
-            margin-top: 8px;
-            opacity: .5;
-            font-size: 16px;
-            letter-spacing: 1px;
+            margin-top: 10px;
+            opacity: 0.5;
+            font-size: 17px;
+            letter-spacing: 2px;
+            font-weight: 300;
+            backdrop-filter: blur(4px);
+            padding: 4px 0;
         }
-        
+
         .weather-card {
             text-align: right;
             background: var(--card-bg);
-            padding: 12px 20px;
-            border-radius: 16px;
-            backdrop-filter: blur(10px);
+            padding: 18px 28px 20px 28px;
+            border-radius: var(--radius-lg);
+            backdrop-filter: blur(16px);
             border: 1px solid var(--card-border);
-            min-width: 120px;
+            min-width: 170px;
+            transition: var(--transition);
+            box-shadow: var(--shadow-glow);
             position: relative;
-            transition: all .3s;
+            overflow: hidden;
         }
-        
+
+        .weather-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: var(--radius-lg);
+            padding: 1px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.08), transparent 60%);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+
         .weather-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            transform: translateY(-4px) scale(1.01);
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
+            border-color: rgba(255, 255, 255, 0.12);
         }
-        
+
         .weather-location {
-            font-size: 12px;
+            font-size: 13px;
             opacity: 0.5;
-            margin-bottom: 4px;
+            margin-bottom: 6px;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+        }
+
+        .weather-main {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+
+        .weather-temp {
+            font-size: 34px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+
+        .weather-icon {
+            font-size: 38px;
+            transition: var(--transition);
+            display: inline-block;
+            line-height: 1;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+        }
+
+        .weather-icon:hover {
+            transform: scale(1.15) rotate(8deg);
+        }
+
+        .weather-desc {
+            font-size: 14px;
+            opacity: 0.6;
+            margin-top: 2px;
             font-weight: 300;
         }
-        
-        .weather-temp {
-            font-size: 28px;
-            font-weight: 600;
-        }
-        
-        .weather-icon {
-            font-size: 32px;
-            margin-right: 4px;
-            display: inline-block;
-            transition: transform .3s;
-        }
-        
-        .weather-icon:hover {
-            transform: scale(1.2) rotate(10deg);
-        }
-        
-        .weather-desc {
-            font-size: 13px;
-            opacity: .6;
-            margin-top: 4px;
-        }
-        
+
         .weather-wind {
             font-size: 12px;
-            opacity: .4;
+            opacity: 0.35;
             margin-top: 2px;
         }
-        
+
         .location-status {
             font-size: 11px;
             opacity: 0.4;
-            margin-top: 4px;
-            cursor: help;
+            margin-top: 8px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            flex-wrap: wrap;
         }
-        
+
         .location-status .update-link {
             color: var(--text-secondary);
             text-decoration: underline;
             cursor: pointer;
+            transition: color .2s;
+            text-underline-offset: 2px;
         }
-        
+
         .location-status .update-link:hover {
             color: var(--link-hover);
+            opacity: 1;
         }
-        
-        .search {
+
+        /* 搜索栏 */
+        .search-wrapper {
             width: 100%;
-            margin: 30px 0 20px;
+            margin: 18px 0 22px;
             animation: slideUp .6s ease-out .1s both;
         }
-        
-        .search input {
-            width: 100%;
-            padding: 18px 24px;
-            border-radius: 999px;
-            border: 1px solid var(--input-border);
+
+        .search-input-wrap {
+            position: relative;
+            display: flex;
+            align-items: center;
             background: var(--input-bg);
+            border-radius: 60px;
+            border: 1px solid var(--input-border);
+            transition: var(--transition);
+            backdrop-filter: blur(12px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .search-input-wrap:focus-within {
+            border-color: var(--link-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+            background: rgba(255, 255, 255, 0.07);
+        }
+
+        .search-input-wrap:hover {
+            background: var(--card-bg);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .search-input-wrap .search-icon {
+            padding-left: 22px;
+            font-size: 18px;
+            opacity: 0.4;
+            user-select: none;
+        }
+
+        .search-input-wrap input {
+            width: 100%;
+            padding: 18px 22px 18px 14px;
+            border: none;
+            background: transparent;
             color: var(--text-color);
             font-size: 16px;
             outline: none;
-            transition: all .3s ease;
-            backdrop-filter: blur(10px);
+            font-weight: 400;
+            letter-spacing: 0.3px;
         }
-        
-        .search input::placeholder {
+
+        .search-input-wrap input::placeholder {
             color: var(--text-muted);
+            font-weight: 300;
         }
-        
-        .search input:focus {
-            transform: translateY(-2px);
-            border-color: var(--link-hover);
-            box-shadow: 0 4px 20px rgba(0,0,0,.15);
-        }
-        
-        .search input:hover {
-            background: var(--card-bg);
-            border-color: var(--link-color);
-        }
-        
+
         .search-history {
-            margin-top: 8px;
+            margin-top: 12px;
             display: none;
+            background: var(--card-bg);
+            border-radius: var(--radius-md);
+            padding: 8px 6px;
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--card-border);
+            box-shadow: var(--shadow-glow);
         }
-        
+
         .search-history.show {
             display: block;
-            animation: slideUp .3s ease-out;
+            animation: slideUp .25s ease-out;
         }
-        
+
         .search-history-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 4px;
-            padding: 0 2px;
+            padding: 4px 14px 10px 14px;
+            border-bottom: 1px solid var(--card-border);
         }
-        
+
         .search-history-header span {
             font-size: 11px;
             color: var(--text-muted);
+            font-weight: 400;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
         }
-        
+
         .search-history-header button {
             background: none;
             border: none;
-            color: rgba(255,255,255,.3);
+            color: rgba(255, 255, 255, 0.3);
             font-size: 11px;
             cursor: pointer;
-            padding: 2px 6px;
-            border-radius: 4px;
-            transition: all .2s;
+            padding: 2px 12px;
+            border-radius: 20px;
+            transition: var(--transition);
         }
-        
+
         .search-history-header button:hover {
             color: #ff6b6b;
-            background: rgba(255,107,107,.1);
+            background: rgba(255, 107, 107, 0.1);
         }
-        
+
         .search-history-item {
             display: block;
             width: 100%;
-            padding: 8px 12px;
+            padding: 8px 18px;
             border: none;
-            background: rgba(255,255,255,.04);
-            color: rgba(255,255,255,.5);
+            background: rgba(255, 255, 255, 0.02);
+            color: rgba(255, 255, 255, 0.6);
             font-size: 14px;
             text-align: left;
             cursor: pointer;
-            border-radius: 6px;
+            border-radius: var(--radius-sm);
             margin-bottom: 2px;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
-            transition: all .2s;
+            transition: var(--transition);
         }
-        
+
         .search-history-item:hover {
-            background: rgba(255,255,255,.1);
+            background: rgba(255, 255, 255, 0.08);
             color: #fff;
-            transform: translateX(4px);
+            transform: translateX(6px);
         }
-        
+
         .quick-links {
             display: flex;
-            gap: 12px;
+            gap: 10px;
             flex-wrap: wrap;
-            margin-top: 12px;
+            margin-top: 18px;
         }
-        
+
         .quick-links a {
             color: var(--link-color);
             text-decoration: none;
             font-size: 13px;
-            transition: all .2s;
-            padding: 6px 12px;
-            border-radius: 20px;
-            background: rgba(255,255,255,.03);
+            transition: var(--transition);
+            padding: 6px 20px;
+            border-radius: 40px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid transparent;
+            backdrop-filter: blur(4px);
+            font-weight: 400;
+            letter-spacing: 0.3px;
         }
-        
+
         .quick-links a:hover {
             color: var(--link-hover);
             background: var(--card-bg);
             transform: translateY(-2px);
+            border-color: var(--card-border);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
         }
-        
+
+        /* 小部件网格 */
+        .widget-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin: 28px 0 18px;
+            animation: slideUp .6s ease-out .15s both;
+        }
+
+        .widget-item {
+            background: var(--card-bg);
+            border-radius: var(--radius-md);
+            padding: 16px 18px;
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--card-border);
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            cursor: default;
+        }
+
+        .widget-item:hover {
+            transform: translateY(-3px);
+            border-color: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .widget-icon {
+            font-size: 26px;
+            opacity: 0.7;
+            transition: var(--transition);
+        }
+
+        .widget-item:hover .widget-icon {
+            opacity: 1;
+            transform: scale(1.05);
+        }
+
+        .widget-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .widget-label {
+            font-size: 13px;
+            opacity: 0.5;
+            font-weight: 300;
+        }
+
+        .widget-value {
+            font-size: 18px;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+        }
+
+        /* 引用 */
         .quote {
-            margin-top: 50px;
-            padding: 20px 0;
+            margin-top: 44px;
+            padding: 22px 0 12px;
             border-top: 1px solid var(--card-border);
-            opacity: .7;
-            font-size: 16px;
+            opacity: 0.7;
+            font-size: 17px;
             line-height: 1.8;
             transition: opacity .3s;
             animation: slideUp .6s ease-out .2s both;
+            text-align: center;
         }
-        
+
         .quote:hover {
-            opacity: .9;
+            opacity: 0.95;
         }
-        
-        .theme-toggle {
-            position: fixed;
-            top: 20px;
-            right: 70px;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            border: 1px solid var(--card-border);
-            background: var(--card-bg);
-            color: var(--text-secondary);
-            font-size: 18px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            backdrop-filter: blur(10px);
-            z-index: 100;
-            transition: all .3s;
-        }
-        
-        .theme-toggle:hover {
-            color: var(--link-hover);
-            border-color: var(--link-hover);
-            transform: rotate(180deg);
-        }
-        
+
         .quote-text {
             font-style: italic;
             letter-spacing: 0.5px;
+            font-weight: 300;
         }
-        
+
         .quote-author {
             display: block;
-            margin-top: 8px;
-            opacity: .5;
+            margin-top: 6px;
+            opacity: 0.45;
             font-size: 14px;
             font-style: normal;
+            font-weight: 300;
+            letter-spacing: 1px;
         }
-        
+
+        /* 页脚 */
         .footer {
-            margin-top: 60px;
+            margin-top: 48px;
             color: var(--text-muted);
             font-size: 12px;
             display: flex;
@@ -359,99 +514,116 @@
             border-top: 1px solid var(--card-border);
             animation: slideUp .6s ease-out .3s both;
         }
-        
+
         .footer span {
-            display: inline-block;
-            transition: all .3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: var(--transition);
+            opacity: 0.7;
         }
-        
+
         .footer span:hover {
             color: var(--text-secondary);
+            opacity: 1;
         }
-        
+
+        /* 位置提示 */
         .location-prompt {
             display: block;
             background: var(--card-bg);
             border: 1px solid var(--card-border);
-            border-radius: 12px;
-            padding: 16px 20px;
-            margin-bottom: 20px;
+            border-radius: var(--radius-lg);
+            padding: 20px 28px;
+            margin-bottom: 28px;
             text-align: center;
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(12px);
             animation: slideUp .6s ease-out;
+            box-shadow: var(--shadow-glow);
         }
-        
+
         .location-prompt p {
             opacity: 0.7;
             font-size: 14px;
-            margin-bottom: 12px;
+            margin-bottom: 14px;
+            font-weight: 300;
         }
-        
+
         .location-prompt button {
-            background: rgba(255,255,255,.1);
-            border: 1px solid rgba(255,255,255,.15);
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             color: var(--text-color);
-            padding: 8px 24px;
-            border-radius: 20px;
+            padding: 10px 32px;
+            border-radius: 40px;
             cursor: pointer;
             font-size: 14px;
-            transition: all .3s;
+            transition: var(--transition);
+            backdrop-filter: blur(4px);
+            font-weight: 400;
+            letter-spacing: 0.3px;
         }
-        
-        .location-prompt button:hover {
-            background: rgba(255,255,255,.2);
-            transform: translateY(-1px);
+
+        .location-prompt button:hover:not(:disabled) {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
         }
-        
+
         .location-prompt button:disabled {
-            opacity: 0.4;
+            opacity: 0.5;
             cursor: not-allowed;
         }
-        
+
+        /* 通知 */
         .notification {
             position: fixed;
-            top: 20px;
+            top: 24px;
             left: 50%;
             transform: translateX(-50%);
             background: var(--card-bg);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(16px);
             border: 1px solid var(--card-border);
-            padding: 12px 24px;
-            border-radius: 12px;
+            padding: 14px 32px;
+            border-radius: 60px;
             color: var(--text-color);
             font-size: 14px;
             z-index: 1000;
             animation: fadeIn .3s ease-out;
             max-width: 90%;
             text-align: center;
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.4);
+            font-weight: 400;
+            letter-spacing: 0.3px;
         }
-        
+
+        /* 用户区域 */
         .user-section {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
             position: fixed;
             top: 20px;
             right: 140px;
             z-index: 100;
             background: var(--card-bg);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(16px);
             border: 1px solid var(--card-border);
-            border-radius: 20px;
-            padding: 6px 16px 6px 12px;
-            transition: all .3s;
+            border-radius: 60px;
+            padding: 6px 18px 6px 16px;
+            transition: var(--transition);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
         }
-        
+
         .user-section:hover {
-            background: var(--card-bg);
-            border-color: var(--link-color);
+            border-color: rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.06);
         }
-        
+
         .user-avatar {
             font-size: 20px;
             line-height: 1;
         }
-        
+
         .user-name {
             font-size: 13px;
             color: var(--text-secondary);
@@ -459,162 +631,362 @@
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
+            font-weight: 400;
         }
-        
+
         .user-btn {
             background: none;
             border: none;
             color: var(--text-muted);
             font-size: 12px;
             cursor: pointer;
-            padding: 2px 8px;
-            border-radius: 4px;
-            transition: all .2s;
+            padding: 2px 12px;
+            border-radius: 30px;
+            transition: var(--transition);
         }
-        
+
         .user-btn:hover {
             color: var(--link-hover);
-            background: rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.08);
         }
-        
+
+        /* 主题切换 */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 70px;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: 1px solid var(--card-border);
+            background: var(--card-bg);
+            color: var(--text-secondary);
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(16px);
+            z-index: 100;
+            transition: var(--transition);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .theme-toggle:hover {
+            color: var(--link-hover);
+            border-color: var(--link-hover);
+            transform: rotate(180deg) scale(1.05);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        /* 语言选择器 */
         .language-selector {
             position: fixed;
             top: 20px;
             right: 20px;
             z-index: 100;
             background: var(--card-bg);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(16px);
             border: 1px solid var(--card-border);
-            border-radius: 8px;
-            padding: 4px;
-            transition: all .3s;
+            border-radius: 40px;
+            padding: 4px 8px;
+            transition: var(--transition);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
         }
-        
+
         .language-selector select {
             background: transparent;
             color: var(--text-color);
             border: none;
-            padding: 8px 12px;
+            padding: 6px 16px;
             font-size: 13px;
             cursor: pointer;
             outline: none;
-            border-radius: 6px;
+            border-radius: 40px;
             min-width: 100px;
+            font-weight: 400;
         }
-        
+
         .language-selector select:hover {
-            background: rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.05);
         }
-        
+
         .language-selector select option {
             background: #1a2233;
             color: #fff;
         }
-        
-        @media (max-width: 640px) {
+
+        /* 模态框 */
+        #authModal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        #authModal .auth-box {
+            background: var(--bg-color);
+            border: 1px solid var(--card-border);
+            border-radius: 32px;
+            padding: 44px 40px;
+            max-width: 440px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 32px 80px rgba(0, 0, 0, 0.6);
+            animation: fadeIn .3s ease-out;
+        }
+
+        .auth-box .auth-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .auth-box .auth-header h2 {
+            font-size: 26px;
+            font-weight: 700;
+            background: var(--gradient-text);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .auth-box .auth-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 30px;
+            cursor: pointer;
+            transition: color .2s;
+            padding: 0 8px;
+            line-height: 1;
+        }
+
+        .auth-box .auth-close:hover {
+            color: #fff;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            color: var(--text-secondary);
+            font-size: 13px;
+            margin-bottom: 6px;
+            font-weight: 400;
+            letter-spacing: 0.3px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 14px 20px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--input-border);
+            background: var(--input-bg);
+            color: var(--text-color);
+            font-size: 15px;
+            outline: none;
+            transition: border .2s;
+        }
+
+        .form-group input:focus {
+            border-color: var(--link-hover);
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .auth-submit {
+            width: 100%;
+            padding: 16px;
+            border-radius: 60px;
+            border: none;
+            background: linear-gradient(135deg, #4a6fa5, #8899bb);
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 10px;
+            letter-spacing: 0.5px;
+        }
+
+        .auth-submit:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(74, 111, 165, 0.35);
+        }
+
+        .auth-submit:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .auth-switch {
+            margin-top: 20px;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 13px;
+            cursor: pointer;
+            transition: color .2s;
+            padding: 6px;
+        }
+
+        .auth-switch:hover {
+            color: var(--text-secondary);
+        }
+
+        .auth-error {
+            color: #ef4444;
+            font-size: 13px;
+            margin-top: 14px;
+            display: none;
+            text-align: center;
+            background: rgba(239, 68, 68, 0.08);
+            padding: 10px 16px;
+            border-radius: var(--radius-sm);
+        }
+
+        /* 响应式 */
+        @media (max-width: 768px) {
             .container {
-                padding: 20px;
+                padding: 6px 0;
             }
-            
+
             .time {
-                font-size: 48px;
-                letter-spacing: -1px;
+                font-size: 56px;
+                letter-spacing: -1.5px;
             }
-            
+
             .time-seconds {
-                font-size: 18px;
+                font-size: 20px;
             }
-            
+
             .top {
                 flex-direction: column;
-                gap: 20px;
+                gap: 18px;
             }
-            
+
             .weather-card {
                 text-align: left;
                 width: 100%;
-                padding: 12px 16px;
+                padding: 16px 20px;
             }
-            
-            .weather-temp {
-                font-size: 24px;
+
+            .weather-main {
+                justify-content: flex-start;
             }
-            
-            .search input {
-                padding: 14px 20px;
+
+            .location-status {
+                justify-content: flex-start;
+            }
+
+            .search-input-wrap input {
+                padding: 14px 16px 14px 8px;
                 font-size: 15px;
             }
-            
-            .quote {
-                font-size: 14px;
-                margin-top: 30px;
+
+            .search-input-wrap .search-icon {
+                padding-left: 16px;
+                font-size: 16px;
             }
-            
+
+            .widget-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                gap: 12px;
+            }
+
+            .quote {
+                font-size: 15px;
+                margin-top: 28px;
+            }
+
             .footer {
                 flex-direction: column;
-                gap: 4px;
+                gap: 6px;
                 font-size: 11px;
             }
-            
-            .location-prompt {
-                padding: 12px 16px;
-            }
-            
+
             .language-selector {
                 top: 10px;
                 right: 10px;
-                padding: 2px;
+                padding: 2px 6px;
             }
-            
+
             .language-selector select {
                 font-size: 12px;
-                padding: 4px 8px;
-                min-width: 80px;
-            }
-            
-            .theme-selector {
-                top: 60px;
-                right: 10px;
-            }
-            
-            .theme-selector select {
-                font-size: 11px;
-                padding: 4px 8px;
+                padding: 4px 12px;
                 min-width: 70px;
             }
-            
+
             .theme-toggle {
                 top: 10px;
                 right: 60px;
-                width: 32px;
-                height: 32px;
-                font-size: 14px;
+                width: 36px;
+                height: 36px;
+                font-size: 15px;
             }
-            
+
             .user-section {
                 top: 10px;
-                right: 110px;
-                padding: 4px 12px 4px 8px;
+                right: 105px;
+                padding: 4px 12px 4px 10px;
+                gap: 6px;
             }
-            
+
             .user-name {
                 font-size: 11px;
                 max-width: 60px;
+            }
+
+            .user-btn {
+                font-size: 11px;
+                padding: 0 8px;
+            }
+
+            #authModal .auth-box {
+                padding: 28px 22px;
+            }
+
+            .location-prompt {
+                padding: 16px 18px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .time {
+                font-size: 42px;
+            }
+            .time-seconds {
+                font-size: 16px;
+            }
+            .widget-grid {
+                grid-template-columns: 1fr 1fr;
             }
         }
     </style>
 </head>
 <body>
+    <!-- 动态光晕 -->
+    <div class="bg"></div>
+    <div class="bg-orb"></div>
+    <div class="bg-orb"></div>
+
+    <!-- 固定控件 -->
     <button class="theme-toggle" id="themeToggle" title="切换主题">◐</button>
-    
+
     <div class="user-section" id="userSection">
         <span class="user-avatar">👤</span>
         <span class="user-name" id="userName">访客</span>
         <button class="user-btn" onclick="showLoginModal()">登录</button>
     </div>
-    
-    <div class="bg"></div>
-    
+
     <div class="language-selector">
         <select id="languageSelect" onchange="changeLanguage(this.value)">
             <option value="zh">中文</option>
@@ -623,30 +995,45 @@
             <option value="ko">한국어</option>
         </select>
     </div>
-    
+
     <div class="container">
+        <!-- 位置提示 -->
         <div class="location-prompt" id="locationPrompt">
             <p>📍 启用位置服务查看您所在城市的实时天气</p>
             <button id="enableLocation" onclick="requestLocation()">🌐 允许获取位置</button>
         </div>
-        
+
+        <!-- 顶部 -->
         <div class="top">
             <div class="time-section">
-                <div class="time"><span id="clockDisplay">--:--</span><span class="time-seconds" id="secondsDisplay">00</span></div>
+                <div class="time">
+                    <span id="clockDisplay">--:--</span>
+                    <span class="time-seconds" id="secondsDisplay">00</span>
+                </div>
                 <div class="date" id="dateDisplay">加载中...</div>
             </div>
-            
+
             <div class="weather-card">
                 <div class="weather-location">📍 东京</div>
-                <div><span class="weather-icon">☀️</span><span class="weather-temp">24°C</span></div>
+                <div class="weather-main">
+                    <span class="weather-icon">☀️</span>
+                    <span class="weather-temp">24°C</span>
+                </div>
                 <div class="weather-desc">晴朗</div>
                 <div class="weather-wind">💨 5 km/h</div>
-                <div class="location-status" id="locationStatus">📍 使用默认位置 · <span class="update-link" onclick="requestLocation()">更新位置</span></div>
+                <div class="location-status" id="locationStatus">
+                    <span>📍 使用默认位置</span>
+                    <span class="update-link" onclick="requestLocation()">更新位置</span>
+                </div>
             </div>
         </div>
-        
-        <div class="search">
-            <input id="search" type="text" placeholder="搜索... (Enter 键搜索)" autofocus aria-label="搜索... (Enter 键搜索)">
+
+        <!-- 搜索 -->
+        <div class="search-wrapper">
+            <div class="search-input-wrap">
+                <span class="search-icon">🔍</span>
+                <input id="search" type="text" placeholder="搜索... (Enter 键搜索)" autofocus aria-label="搜索... (Enter 键搜索)">
+            </div>
             <div id="searchHistory" class="search-history">
                 <div class="search-history-header">
                     <span>最近搜索</span>
@@ -658,346 +1045,465 @@
                 <a href="https://github.com" target="_blank">GitHub</a>
                 <a href="https://news.ycombinator.com" target="_blank">Hacker News</a>
                 <a href="https://www.reddit.com" target="_blank">Reddit</a>
+                <a href="https://www.wikipedia.org" target="_blank">Wikipedia</a>
             </div>
         </div>
-        
+
+        <!-- 小部件网格 -->
+        <div class="widget-grid">
+            <div class="widget-item">
+                <span class="widget-icon">📬</span>
+                <div class="widget-info">
+                    <span class="widget-label">消息</span>
+                    <span class="widget-value">3 条</span>
+                </div>
+            </div>
+            <div class="widget-item">
+                <span class="widget-icon">📅</span>
+                <div class="widget-info">
+                    <span class="widget-label">日程</span>
+                    <span class="widget-value" id="widgetSchedule">今天 2 项</span>
+                </div>
+            </div>
+            <div class="widget-item">
+                <span class="widget-icon">🎵</span>
+                <div class="widget-info">
+                    <span class="widget-label">音乐</span>
+                    <span class="widget-value">Lofi 电台</span>
+                </div>
+            </div>
+            <div class="widget-item">
+                <span class="widget-icon">📊</span>
+                <div class="widget-info">
+                    <span class="widget-label">存储</span>
+                    <span class="widget-value">43% 已用</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 名言 -->
         <div class="quote">
             <span class="quote-text">“少即是多”</span>
-            <span class="quote-author">- 密斯·凡·德·罗</span>
+            <span class="quote-author">— 密斯·凡·德·罗</span>
         </div>
-        
+
+        <!-- 页脚 -->
         <div class="footer">
             <span>📍 127.0.0.1</span>
             <span>Tokyo Japan</span>
             <span id="visitCounter" style="cursor:default;">👁 12345</span>
             <span>⚡ Cloudflare Edge</span>
+            <span>🕊️ 优雅·极简</span>
         </div>
     </div>
-    
+
     <!-- 登录/注册模态框 -->
-    <div id="authModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(10px);z-index:1000;justify-content:center;align-items:center;">
-        <div style="background:var(--bg-color);border:1px solid var(--card-border);border-radius:20px;padding:40px;max-width:420px;width:90%;max-height:90vh;overflow-y:auto;">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;">
-                <h2 id="authModalTitle" style="font-size:24px;font-weight:700;background:var(--gradient-text);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">登录</h2>
-                <button onclick="closeAuthModal()" style="background:none;border:none;color:var(--text-muted);font-size:24px;cursor:pointer;">×</button>
+    <div id="authModal">
+        <div class="auth-box">
+            <div class="auth-header">
+                <h2 id="authModalTitle">登录</h2>
+                <button class="auth-close" onclick="closeAuthModal()">×</button>
             </div>
             <div id="authForm">
-                <div class="form-group" style="margin-bottom:16px;">
-                    <label style="color:var(--text-secondary);font-size:13px;">用户名</label>
-                    <input id="authUsername" type="text" style="width:100%;padding:12px 16px;border-radius:12px;border:1px solid var(--input-border);background:var(--input-bg);color:var(--text-color);font-size:16px;outline:none;"/>
+                <div class="form-group">
+                    <label>用户名</label>
+                    <input id="authUsername" type="text" placeholder="输入用户名" />
                 </div>
-                <div class="form-group" style="margin-bottom:16px;">
-                    <label style="color:var(--text-secondary);font-size:13px;">密码</label>
-                    <input id="authPassword" type="password" style="width:100%;padding:12px 16px;border-radius:12px;border:1px solid var(--input-border);background:var(--input-bg);color:var(--text-color);font-size:16px;outline:none;"/>
+                <div class="form-group">
+                    <label>密码</label>
+                    <input id="authPassword" type="password" placeholder="输入密码" />
                 </div>
-                <div id="authEmailGroup" class="form-group" style="margin-bottom:16px;display:none;">
-                    <label style="color:var(--text-secondary);font-size:13px;">邮箱</label>
-                    <input id="authEmail" type="email" style="width:100%;padding:12px 16px;border-radius:12px;border:1px solid var(--input-border);background:var(--input-bg);color:var(--text-color);font-size:16px;outline:none;"/>
+                <div class="form-group" id="authEmailGroup" style="display:none;">
+                    <label>邮箱</label>
+                    <input id="authEmail" type="email" placeholder="输入邮箱" />
                 </div>
-                <div id="authDisplayNameGroup" class="form-group" style="margin-bottom:16px;display:none;">
-                    <label style="color:var(--text-secondary);font-size:13px;">显示名称</label>
-                    <input id="authDisplayName" type="text" style="width:100%;padding:12px 16px;border-radius:12px;border:1px solid var(--input-border);background:var(--input-bg);color:var(--text-color);font-size:16px;outline:none;"/>
+                <div class="form-group" id="authDisplayNameGroup" style="display:none;">
+                    <label>显示名称</label>
+                    <input id="authDisplayName" type="text" placeholder="显示名称" />
                 </div>
-                <button id="authSubmitBtn" onclick="handleAuth()" style="width:100%;padding:14px;border-radius:12px;border:none;background:linear-gradient(135deg,#4a6fa5,#8899bb);color:#fff;font-size:16px;font-weight:600;cursor:pointer;transition:all .3s;">登录</button>
-                <p id="authSwitchText" style="margin-top:16px;text-align:center;color:var(--text-muted);font-size:13px;cursor:pointer;" onclick="toggleAuthMode()">注册</p>
-                <div id="authError" style="color:#ef4444;font-size:13px;margin-top:12px;display:none;text-align:center;"></div>
+                <button class="auth-submit" id="authSubmitBtn" onclick="handleAuth()">登录</button>
+                <div class="auth-switch" onclick="toggleAuthMode()">注册</div>
+                <div class="auth-error" id="authError"></div>
             </div>
         </div>
     </div>
 
     <script>
-        // 模拟数据
-        const mockWeatherData = {
-            temp: "24°C",
-            desc: "晴朗",
-            icon: "☀️",
-            windspeed: 5,
-            location: "东京"
-        };
-        
-        const mockQuote = {
-            text: "少即是多",
-            author: "密斯·凡·德·罗"
-        };
-        
-        // 初始化
-        document.addEventListener('DOMContentLoaded', function() {
-            updateClock();
-            setInterval(updateClock, 1000);
-            
-            // 设置日期
-            const dateOptions = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
-            const date = new Date().toLocaleDateString('zh-CN', dateOptions);
-            document.getElementById('dateDisplay').textContent = date;
-            
-            // 模拟访问计数
-            document.getElementById('visitCounter').textContent = '👁 ' + Math.floor(Math.random() * 10000 + 5000);
-            
-            // 搜索功能
-            setupSearchFunctionality();
-            
-            // 主题切换
-            setupThemeToggle();
-            
-            // 模拟加载动画
-            setTimeout(() => {
-                document.querySelector('.time').style.transform = 'translateY(0)';
-                document.querySelector('.weather-card').style.transform = 'translateY(0)';
-            }, 300);
-        });
-        
-        // 时钟更新
-        function updateClock() {
-            const now = new Date();
-            const hours = String(now.getHours()).padStart(2, '0');
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            const seconds = String(now.getSeconds()).padStart(2, '0');
-            
-            document.getElementById('clockDisplay').textContent = `${hours}:${minutes}`;
-            document.getElementById('secondsDisplay').textContent = seconds;
-        }
-        
-        // 搜索功能
-        function setupSearchFunctionality() {
-            const searchInput = document.getElementById('search');
-            const searchHistory = document.getElementById('searchHistory');
-            const STORAGE_KEY = 'search_history';
-            const MAX_HISTORY = 10;
-            
-            function loadHistory() {
-                try {
-                    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-                } catch(_) {
-                    return [];
-                }
+        (function() {
+            // ----- 通知 -----
+            function showNotification(message) {
+                const existing = document.querySelector('.notification');
+                if(existing) existing.remove();
+
+                const notification = document.createElement('div');
+                notification.className = 'notification';
+                notification.textContent = message;
+                document.body.appendChild(notification);
+
+                setTimeout(() => {
+                    notification.style.opacity = '0';
+                    notification.style.transition = 'opacity 0.6s ease';
+                    setTimeout(() => {
+                        notification.remove();
+                    }, 600);
+                }, 3200);
             }
-            
-            function saveHistory(query) {
-                let history = loadHistory();
-                history = history.filter(item => item !== query);
-                history.unshift(query);
-                if(history.length > MAX_HISTORY) history = history.slice(0, MAX_HISTORY);
-                try {
-                    localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
-                } catch(_) {}
-                return history;
+
+            // ----- 时钟 -----
+            function updateClock() {
+                const now = new Date();
+                const hours = String(now.getHours()).padStart(2, '0');
+                const minutes = String(now.getMinutes()).padStart(2, '0');
+                const seconds = String(now.getSeconds()).padStart(2, '0');
+                document.getElementById('clockDisplay').textContent = `${hours}:${minutes}`;
+                document.getElementById('secondsDisplay').textContent = seconds;
             }
-            
-            function renderHistory(history) {
-                const container = document.getElementById('searchHistory');
-                if(!container) return;
-                
-                const header = container.querySelector('.search-history-header');
-                container.innerHTML = '';
-                if(header) container.appendChild(header);
-                
-                if(history.length === 0) {
-                    container.classList.remove('show');
-                    return;
+
+            // ----- 日期 -----
+            function setDate() {
+                const dateOptions = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
+                const date = new Date().toLocaleDateString('zh-CN', dateOptions);
+                document.getElementById('dateDisplay').textContent = date;
+            }
+
+            // ----- 访问计数 & 小部件 -----
+            function setMeta() {
+                const counter = Math.floor(Math.random() * 10000 + 5000);
+                document.getElementById('visitCounter').textContent = '👁 ' + counter;
+
+                // 日程小部件
+                const now = new Date();
+                const day = now.getDate();
+                const events = day % 3 === 0 ? '今天 3 项' : (day % 2 === 0 ? '今天 2 项' : '今天 1 项');
+                document.getElementById('widgetSchedule').textContent = events;
+            }
+
+            // ----- 搜索功能 -----
+            function setupSearch() {
+                const searchInput = document.getElementById('search');
+                const searchHistory = document.getElementById('searchHistory');
+                const STORAGE_KEY = 'search_history';
+                const MAX_HISTORY = 12;
+
+                function loadHistory() {
+                    try {
+                        return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+                    } catch(_) {
+                        return [];
+                    }
                 }
-                
-                for(let i = 0; i < history.length; i++) {
-                    const btn = document.createElement('button');
-                    btn.className = 'search-history-item';
-                    btn.textContent = history[i];
-                    btn.addEventListener('click', function() {
-                        const q = encodeURIComponent(this.textContent);
-                        window.open('https://www.google.com/search?q=' + q, '_blank');
-                        document.getElementById('search').value = '';
+
+                function saveHistory(query) {
+                    let history = loadHistory();
+                    history = history.filter(item => item !== query);
+                    history.unshift(query);
+                    if(history.length > MAX_HISTORY) history = history.slice(0, MAX_HISTORY);
+                    try {
+                        localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
+                    } catch(_) {}
+                    return history;
+                }
+
+                function renderHistory(history) {
+                    const container = document.getElementById('searchHistory');
+                    if(!container) return;
+
+                    const header = container.querySelector('.search-history-header');
+                    container.innerHTML = '';
+                    if(header) container.appendChild(header);
+
+                    if(history.length === 0) {
                         container.classList.remove('show');
-                    });
-                    container.appendChild(btn);
+                        return;
+                    }
+
+                    for(let i = 0; i < history.length; i++) {
+                        const btn = document.createElement('button');
+                        btn.className = 'search-history-item';
+                        btn.textContent = history[i];
+                        btn.addEventListener('click', function() {
+                            const q = encodeURIComponent(this.textContent);
+                            window.open('https://www.google.com/search?q=' + q, '_blank');
+                            document.getElementById('search').value = '';
+                            container.classList.remove('show');
+                        });
+                        container.appendChild(btn);
+                    }
+                    container.classList.add('show');
                 }
-                container.classList.add('show');
-            }
-            
-            function doSearch(query) {
-                const q = encodeURIComponent(query);
-                window.open('https://www.google.com/search?q=' + q, '_blank');
-                const history = saveHistory(query);
-                renderHistory(history);
-            }
-            
-            searchInput.addEventListener('keydown', function(e) {
-                const val = this.value.trim();
-                if(e.key === 'Enter' && val) {
-                    doSearch(val);
-                    this.value = '';
-                    document.getElementById('searchHistory').classList.remove('show');
+
+                function doSearch(query) {
+                    const q = encodeURIComponent(query);
+                    window.open('https://www.google.com/search?q=' + q, '_blank');
+                    const history = saveHistory(query);
+                    renderHistory(history);
                 }
-            });
-            
-            searchInput.addEventListener('focus', function() {
-                const history = loadHistory();
-                if(history.length > 0) renderHistory(history);
-            });
-            
-            searchInput.addEventListener('blur', function() {
-                setTimeout(() => {
+
+                searchInput.addEventListener('keydown', function(e) {
+                    const val = this.value.trim();
+                    if(e.key === 'Enter' && val) {
+                        doSearch(val);
+                        this.value = '';
+                        document.getElementById('searchHistory').classList.remove('show');
+                    }
+                });
+
+                searchInput.addEventListener('focus', function() {
+                    const history = loadHistory();
+                    if(history.length > 0) renderHistory(history);
+                });
+
+                searchInput.addEventListener('blur', function() {
+                    setTimeout(() => {
+                        document.getElementById('searchHistory').classList.remove('show');
+                    }, 200);
+                });
+
+                document.getElementById('clearHistory').addEventListener('click', function() {
+                    try {
+                        localStorage.removeItem(STORAGE_KEY);
+                    } catch(_) {}
                     document.getElementById('searchHistory').classList.remove('show');
-                }, 200);
-            });
-            
-            document.getElementById('clearHistory').addEventListener('click', function() {
-                try {
-                    localStorage.removeItem(STORAGE_KEY);
-                } catch(_) {}
-                document.getElementById('searchHistory').classList.remove('show');
-            });
-        }
-        
-        // 主题切换
-        function setupThemeToggle() {
-            const themeToggle = document.getElementById('themeToggle');
-            const html = document.documentElement;
-            
-            function setTheme(theme) {
-                html.setAttribute('data-theme', theme);
-                document.cookie = `theme=${theme}; path=/; max-age=31536000; samesite=lax; Secure`;
-                themeToggle.textContent = theme === 'light' ? '◑' : '◐';
+                    showNotification('🧹 搜索历史已清除');
+                });
             }
-            
-            themeToggle.addEventListener('click', function() {
-                const current = html.getAttribute('data-theme') || 'dark';
+
+            // ----- 主题切换 (循环) -----
+            function setupTheme() {
+                const themeToggle = document.getElementById('themeToggle');
+                const html = document.documentElement;
                 const themes = ['dark', 'light', 'ocean', 'forest', 'sunset', 'neon'];
-                const idx = themes.indexOf(current);
-                const next = themes[(idx + 1) % themes.length];
-                setTheme(next);
-            });
-        }
-        
-        // 显示通知
-        function showNotification(message) {
-            const existing = document.querySelector('.notification');
-            if(existing) existing.remove();
-            
-            const notification = document.createElement('div');
-            notification.className = 'notification';
-            notification.textContent = message;
-            document.body.appendChild(notification);
-            
-            setTimeout(() => {
-                notification.style.opacity = '0';
-                notification.style.transition = 'opacity 0.5s';
+
+                let current = 'dark';
+                const saved = document.cookie.split('; ').find(row => row.startsWith('theme='));
+                if(saved) {
+                    const val = saved.split('=')[1];
+                    if(themes.includes(val)) current = val;
+                }
+                applyTheme(current);
+
+                themeToggle.addEventListener('click', function() {
+                    const idx = themes.indexOf(current);
+                    const next = themes[(idx + 1) % themes.length];
+                    applyTheme(next);
+                });
+
+                function applyTheme(theme) {
+                    current = theme;
+                    html.setAttribute('data-theme', theme);
+                    document.cookie = `theme=${theme}; path=/; max-age=31536000; samesite=lax; Secure`;
+                    themeToggle.textContent = theme === 'light' ? '◑' : '◐';
+                    const root = document.documentElement.style;
+                    // 重置
+                    root.setProperty('--bg-color', '#0b0d14');
+                    root.setProperty('--text-color', '#f0f3fa');
+                    root.setProperty('--text-secondary', 'rgba(255,255,255,0.55)');
+                    root.setProperty('--text-muted', 'rgba(255,255,255,0.25)');
+                    root.setProperty('--card-bg', 'rgba(255,255,255,0.04)');
+                    root.setProperty('--card-border', 'rgba(255,255,255,0.07)');
+                    root.setProperty('--input-bg', 'rgba(255,255,255,0.05)');
+                    root.setProperty('--input-border', 'rgba(255,255,255,0.1)');
+                    root.setProperty('--link-color', 'rgba(255,255,255,0.45)');
+                    root.setProperty('--link-hover', '#ffffff');
+                    root.setProperty('--gradient-text', 'linear-gradient(135deg, #f0f3fa 0%, #9bb0d9 100%)');
+
+                    if(theme === 'light') {
+                        root.setProperty('--bg-color', '#eef0f5');
+                        root.setProperty('--text-color', '#1a1e2a');
+                        root.setProperty('--text-secondary', 'rgba(0,0,0,0.5)');
+                        root.setProperty('--text-muted', 'rgba(0,0,0,0.3)');
+                        root.setProperty('--card-bg', 'rgba(255,255,255,0.6)');
+                        root.setProperty('--card-border', 'rgba(0,0,0,0.08)');
+                        root.setProperty('--input-bg', 'rgba(255,255,255,0.7)');
+                        root.setProperty('--input-border', 'rgba(0,0,0,0.1)');
+                        root.setProperty('--link-color', 'rgba(0,0,0,0.4)');
+                        root.setProperty('--link-hover', '#000');
+                        root.setProperty('--gradient-text', 'linear-gradient(135deg, #2a3a5a, #6a8ab0)');
+                    } else if(theme === 'ocean') {
+                        root.setProperty('--bg-color', '#081a2e');
+                        root.setProperty('--text-color', '#cfe8ff');
+                        root.setProperty('--text-secondary', 'rgba(180,220,255,0.6)');
+                        root.setProperty('--text-muted', 'rgba(180,220,255,0.3)');
+                        root.setProperty('--card-bg', 'rgba(20,60,100,0.25)');
+                        root.setProperty('--card-border', 'rgba(100,180,255,0.15)');
+                        root.setProperty('--input-bg', 'rgba(20,60,100,0.2)');
+                        root.setProperty('--input-border', 'rgba(100,180,255,0.2)');
+                        root.setProperty('--link-color', 'rgba(160,210,255,0.5)');
+                        root.setProperty('--link-hover', '#b0daff');
+                        root.setProperty('--gradient-text', 'linear-gradient(135deg, #7fc8ff, #3a7bb5)');
+                    } else if(theme === 'forest') {
+                        root.setProperty('--bg-color', '#0b1a0b');
+                        root.setProperty('--text-color', '#d4edda');
+                        root.setProperty('--text-secondary', 'rgba(180,220,180,0.6)');
+                        root.setProperty('--text-muted', 'rgba(180,220,180,0.3)');
+                        root.setProperty('--card-bg', 'rgba(30,70,30,0.25)');
+                        root.setProperty('--card-border', 'rgba(80,180,80,0.15)');
+                        root.setProperty('--input-bg', 'rgba(30,70,30,0.2)');
+                        root.setProperty('--input-border', 'rgba(80,180,80,0.2)');
+                        root.setProperty('--link-color', 'rgba(160,220,160,0.5)');
+                        root.setProperty('--link-hover', '#b0e0b0');
+                        root.setProperty('--gradient-text', 'linear-gradient(135deg, #7fc87f, #3a7b3a)');
+                    } else if(theme === 'sunset') {
+                        root.setProperty('--bg-color', '#1f0f0a');
+                        root.setProperty('--text-color', '#ffd8b0');
+                        root.setProperty('--text-secondary', 'rgba(255,200,160,0.6)');
+                        root.setProperty('--text-muted', 'rgba(255,200,160,0.3)');
+                        root.setProperty('--card-bg', 'rgba(120,60,40,0.25)');
+                        root.setProperty('--card-border', 'rgba(255,160,80,0.15)');
+                        root.setProperty('--input-bg', 'rgba(120,60,40,0.2)');
+                        root.setProperty('--input-border', 'rgba(255,160,80,0.2)');
+                        root.setProperty('--link-color', 'rgba(255,200,160,0.5)');
+                        root.setProperty('--link-hover', '#ffcc99');
+                        root.setProperty('--gradient-text', 'linear-gradient(135deg, #f5b07a, #b55a3a)');
+                    } else if(theme === 'neon') {
+                        root.setProperty('--bg-color', '#0a0a1a');
+                        root.setProperty('--text-color', '#d0d0ff');
+                        root.setProperty('--text-secondary', 'rgba(180,180,255,0.6)');
+                        root.setProperty('--text-muted', 'rgba(180,180,255,0.3)');
+                        root.setProperty('--card-bg', 'rgba(60,40,120,0.25)');
+                        root.setProperty('--card-border', 'rgba(160,80,255,0.25)');
+                        root.setProperty('--input-bg', 'rgba(60,40,120,0.2)');
+                        root.setProperty('--input-border', 'rgba(160,80,255,0.3)');
+                        root.setProperty('--link-color', 'rgba(200,160,255,0.5)');
+                        root.setProperty('--link-hover', '#c8a0ff');
+                        root.setProperty('--gradient-text', 'linear-gradient(135deg, #b080ff, #6040b0)');
+                    }
+                }
+            }
+
+            // ----- 位置 -----
+            function setupLocation() {
+                window.requestLocation = function() {
+                    const button = document.getElementById('enableLocation');
+                    const prompt = document.getElementById('locationPrompt');
+                    if(button) {
+                        button.disabled = true;
+                        button.textContent = '⏳ 获取中...';
+                    }
+
+                    setTimeout(() => {
+                        if(button) {
+                            button.disabled = false;
+                            button.textContent = '🌐 重新定位';
+                        }
+                        document.querySelector('.weather-temp').textContent = '26°C';
+                        document.querySelector('.weather-desc').textContent = '多云转晴';
+                        document.querySelector('.weather-icon').textContent = '⛅';
+                        document.getElementById('locationStatus').innerHTML = `
+                            <span>✅ 已定位 (精确)</span>
+                            <span class="update-link" onclick="requestLocation()">更新</span>
+                        `;
+                        if(prompt) prompt.style.display = 'none';
+                        showNotification('✅ 位置已更新，天气数据已刷新');
+                    }, 1800);
+                };
+            }
+
+            // ----- 认证 -----
+            function setupAuth() {
+                window.showLoginModal = function() {
+                    document.getElementById('authModal').style.display = 'flex';
+                    document.getElementById('authUsername').focus();
+                };
+
+                window.closeAuthModal = function() {
+                    document.getElementById('authModal').style.display = 'none';
+                    document.getElementById('authError').style.display = 'none';
+                };
+
+                window.toggleAuthMode = function() {
+                    const isLoginMode = document.getElementById('authSubmitBtn').textContent === '登录';
+                    if(isLoginMode) {
+                        document.getElementById('authModalTitle').textContent = '注册';
+                        document.getElementById('authSubmitBtn').textContent = '注册';
+                        document.getElementById('authSwitchText').textContent = '登录';
+                        document.getElementById('authEmailGroup').style.display = 'block';
+                        document.getElementById('authDisplayNameGroup').style.display = 'block';
+                    } else {
+                        document.getElementById('authModalTitle').textContent = '登录';
+                        document.getElementById('authSubmitBtn').textContent = '登录';
+                        document.getElementById('authSwitchText').textContent = '注册';
+                        document.getElementById('authEmailGroup').style.display = 'none';
+                        document.getElementById('authDisplayNameGroup').style.display = 'none';
+                    }
+                    document.getElementById('authError').style.display = 'none';
+                };
+
+                window.handleAuth = function() {
+                    const username = document.getElementById('authUsername').value.trim();
+                    const password = document.getElementById('authPassword').value;
+                    const isLoginMode = document.getElementById('authSubmitBtn').textContent === '登录';
+                    const errorEl = document.getElementById('authError');
+
+                    if(!username || !password) {
+                        errorEl.textContent = '❌ 用户名和密码为必填项';
+                        errorEl.style.display = 'block';
+                        return;
+                    }
+
+                    const btn = document.getElementById('authSubmitBtn');
+                    btn.disabled = true;
+                    btn.textContent = '⏳ ...';
+                    errorEl.style.display = 'none';
+
+                    setTimeout(() => {
+                        if(isLoginMode) {
+                            document.getElementById('userName').textContent = username;
+                            showNotification('✅ 欢迎回来，' + username);
+                        } else {
+                            showNotification('✅ 注册成功，请登录');
+                            toggleAuthMode();
+                        }
+                        btn.disabled = false;
+                        btn.textContent = isLoginMode ? '登录' : '注册';
+                        closeAuthModal();
+                    }, 1500);
+                };
+            }
+
+            // ----- 语言切换 -----
+            function setupLanguage() {
+                window.changeLanguage = function(lang) {
+                    const select = document.getElementById('languageSelect');
+                    if(select) select.disabled = true;
+                    const msgs = {
+                        zh: '⏳ 切换语言中...',
+                        en: '⏳ Switching language...',
+                        ja: '⏳ 言語を切り替え中...',
+                        ko: '⏳ 언어 전환 중...'
+                    };
+                    showNotification(msgs[lang] || msgs.en);
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 900);
+                };
+            }
+
+            // ----- 初始化 -----
+            function init() {
+                updateClock();
+                setInterval(updateClock, 1000);
+                setDate();
+                setMeta();
+                setupSearch();
+                setupTheme();
+                setupLocation();
+                setupAuth();
+                setupLanguage();
+
+                // 默认隐藏位置提示（演示）
                 setTimeout(() => {
-                    notification.remove();
-                }, 500);
-            }, 3000);
-        }
-        
-        // 位置请求
-        function requestLocation() {
-            const button = document.getElementById('enableLocation');
-            const t = { ui: { gettingLocation: '⏳ 获取中...', relocate: '🌐 重新定位', allowLocation: '🌐 允许获取位置' } };
-            
-            if(button) {
-                button.disabled = true;
-                button.textContent = t.ui.gettingLocation;
+                    const prompt = document.getElementById('locationPrompt');
+                    if(prompt) prompt.style.display = 'none';
+                }, 1000);
             }
-            
-            // 模拟位置获取
-            setTimeout(() => {
-                if(button) {
-                    button.disabled = false;
-                    button.textContent = t.ui.relocate;
-                }
-                
-                // 更新天气信息
-                document.querySelector('.weather-temp').textContent = '26°C';
-                document.querySelector('.weather-desc').textContent = '多云转晴';
-                document.querySelector('.weather-icon').textContent = '⛅';
-                document.getElementById('locationStatus').innerHTML = '✅ 已定位 (精确)';
-                
-                // 隐藏位置提示
-                document.getElementById('locationPrompt').style.display = 'none';
-                
-                showNotification('✅ 位置已更新，天气数据已刷新');
-            }, 2000);
-        }
-        
-        // 认证相关函数
-        function showLoginModal() {
-            document.getElementById('authModal').style.display = 'flex';
-            document.getElementById('authUsername').focus();
-        }
-        
-        function closeAuthModal() {
-            document.getElementById('authModal').style.display = 'none';
-            document.getElementById('authError').style.display = 'none';
-        }
-        
-        function toggleAuthMode() {
-            const isLoginMode = document.getElementById('authSubmitBtn').textContent === '登录';
-            
-            if(isLoginMode) {
-                // 切换到注册模式
-                document.getElementById('authModalTitle').textContent = '注册';
-                document.getElementById('authSubmitBtn').textContent = '注册';
-                document.getElementById('authSwitchText').textContent = '登录';
-                document.getElementById('authEmailGroup').style.display = 'block';
-                document.getElementById('authDisplayNameGroup').style.display = 'block';
+
+            if(document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', init);
             } else {
-                // 切换到登录模式
-                document.getElementById('authModalTitle').textContent = '登录';
-                document.getElementById('authSubmitBtn').textContent = '登录';
-                document.getElementById('authSwitchText').textContent = '注册';
-                document.getElementById('authEmailGroup').style.display = 'none';
-                document.getElementById('authDisplayNameGroup').style.display = 'none';
+                init();
             }
-            document.getElementById('authError').style.display = 'none';
-        }
-        
-        function handleAuth() {
-            const username = document.getElementById('authUsername').value.trim();
-            const password = document.getElementById('authPassword').value;
-            const isLoginMode = document.getElementById('authSubmitBtn').textContent === '登录';
-            
-            if(!username || !password) {
-                document.getElementById('authError').textContent = '❌ 用户名和密码为必填项';
-                document.getElementById('authError').style.display = 'block';
-                return;
-            }
-            
-            const btn = document.getElementById('authSubmitBtn');
-            btn.disabled = true;
-            btn.textContent = '⏳ ...';
-            document.getElementById('authError').style.display = 'none';
-            
-            // 模拟认证过程
-            setTimeout(() => {
-                if(isLoginMode) {
-                    document.getElementById('userName').textContent = username;
-                    showNotification('✅ 欢迎回来，' + username);
-                } else {
-                    showNotification('✅ 注册成功，请登录');
-                    toggleAuthMode();
-                }
-                
-                btn.disabled = false;
-                btn.textContent = isLoginMode ? '登录' : '注册';
-                closeAuthModal();
-            }, 1500);
-        }
-        
-        // 语言切换
-        function changeLanguage(lang) {
-            const select = document.getElementById('languageSelect');
-            if(select) select.disabled = true;
-            
-            const msgs = {
-                zh: '⏳ 切换语言中...',
-                en: '⏳ Switching language...',
-                ja: '⏳ 言語を切り替え中...',
-                ko: '⏳ 언어 전환 중...'
-            };
-            
-            showNotification(msgs[lang] || msgs.en);
-            
-            // 模拟语言切换
-            setTimeout(() => {
-                window.location.reload();
-            }, 1000);
-        }
+        })();
     </script>
 </body>
 </html>
