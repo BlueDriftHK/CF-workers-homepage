@@ -1,919 +1,1003 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="zh-CN">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
-<meta name="description" content="Edge Home 静态演示"/>
-<title>Edge Home - 静态演示</title>
-
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-
-body{
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
-  background:#0b0d14;
-  color:#fff;
-  min-height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  -webkit-font-smoothing:antialiased;
-  -moz-osx-font-smoothing:grayscale;
-}
-
-.bg{
-  position:fixed;
-  inset:0;
-  background:
-    radial-gradient(circle at 20% 30%, #1a2233, transparent 60%),
-    radial-gradient(circle at 80% 20%, #151a2a, transparent 60%),
-    radial-gradient(circle at 50% 80%, #0f1420, transparent 50%),
-    #0b0d14;
-  z-index:-1;
-}
-
-.bg::after{
-  content:'';
-  position:absolute;
-  inset:0;
-  background:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
-  opacity:0.5;
-  pointer-events:none;
-}
-
-.container{
-  width:100%;
-  max-width:1000px;
-  padding:40px;
-  animation:fadeIn .6s ease-out;
-  position:relative;
-  z-index:1;
-}
-
-@keyframes fadeIn{
-  from{opacity:0;transform:translateY(20px)}
-  to{opacity:1;transform:translateY(0)}
-}
-
-.top{
-  display:flex;
-  justify-content:space-between;
-  align-items:flex-start;
-  margin-bottom:40px;
-}
-
-.time-section{
-  position:relative;
-}
-
-.time{
-  font-size:72px;
-  font-weight:700;
-  letter-spacing:-2px;
-  background:linear-gradient(135deg,#fff 0%,#8899bb 100%);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-  background-clip:text;
-  line-height:1;
-}
-
-.time-seconds{
-  font-size:24px;
-  opacity:0.4;
-  margin-left:8px;
-  -webkit-text-fill-color:rgba(255,255,255,0.4);
-}
-
-.date{
-  margin-top:8px;
-  opacity:.5;
-  font-size:16px;
-  letter-spacing:1px;
-}
-
-.weather-card{
-  text-align:right;
-  background:rgba(255,255,255,.03);
-  padding:12px 20px;
-  border-radius:16px;
-  backdrop-filter:blur(10px);
-  border:1px solid rgba(255,255,255,.05);
-  min-width:120px;
-  position:relative;
-}
-
-.weather-location{
-  font-size:12px;
-  opacity:0.5;
-  margin-bottom:4px;
-  font-weight:300;
-}
-
-.weather-temp{
-  font-size:28px;
-  font-weight:600;
-}
-
-.weather-icon{
-  font-size:32px;
-  margin-right:4px;
-}
-
-.weather-desc{
-  font-size:13px;
-  opacity:.6;
-  margin-top:4px;
-}
-
-.weather-wind{
-  font-size:12px;
-  opacity:.4;
-  margin-top:2px;
-}
-
-.location-status{
-  font-size:11px;
-  opacity:0.4;
-  margin-top:4px;
-  cursor:help;
-}
-
-.location-status .update-link{
-  color:rgba(255,255,255,0.6);
-  text-decoration:underline;
-  cursor:pointer;
-}
-
-.location-status .update-link:hover{
-  color:#fff;
-}
-
-.search{
-  width:100%;
-  margin:30px 0 20px;
-}
-
-.search input{
-  width:100%;
-  padding:18px 24px;
-  border-radius:999px;
-  border:1px solid rgba(255,255,255,.08);
-  background:rgba(255,255,255,.06);
-  color:#fff;
-  font-size:16px;
-  outline:none;
-  transition:all .3s ease;
-  backdrop-filter:blur(10px);
-}
-
-.search input::placeholder{
-  color:rgba(255,255,255,.3);
-}
-
-.search input:focus{
-  transform:translateY(-2px);
-  background:rgba(255,255,255,.12);
-  border-color:rgba(255,255,255,.15);
-  box-shadow:0 8px 30px rgba(0,0,0,.3);
-}
-
-.search input:hover{
-  background:rgba(255,255,255,.09);
-}
-
-.quick-links{
-  display:flex;
-  gap:12px;
-  flex-wrap:wrap;
-  margin-top:12px;
-}
-
-.quick-links a{
-  color:rgba(255,255,255,.4);
-  text-decoration:none;
-  font-size:13px;
-  transition:color .2s;
-  padding:6px 12px;
-  border-radius:20px;
-  background:rgba(255,255,255,.03);
-}
-
-.quick-links a:hover{
-  color:#fff;
-  background:rgba(255,255,255,.08);
-}
-
-.quote{
-  margin-top:50px;
-  padding:20px 0;
-  border-top:1px solid rgba(255,255,255,.05);
-  opacity:.7;
-  font-size:16px;
-  line-height:1.8;
-  transition:opacity .3s;
-}
-
-.quote:hover{
-  opacity:.9;
-}
-
-.quote-text{
-  font-style:italic;
-  letter-spacing:0.5px;
-}
-
-.quote-author{
-  display:block;
-  margin-top:8px;
-  opacity:.5;
-  font-size:14px;
-  font-style:normal;
-}
-
-.footer{
-  margin-top:60px;
-  opacity:.3;
-  font-size:12px;
-  display:flex;
-  justify-content:space-between;
-  flex-wrap:wrap;
-  gap:8px;
-  padding-top:20px;
-  border-top:1px solid rgba(255,255,255,.03);
-}
-
-.footer span{
-  display:inline-block;
-}
-
-.location-prompt{
-  display:block;
-  background:rgba(255,255,255,.05);
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:12px;
-  padding:16px 20px;
-  margin-bottom:20px;
-  text-align:center;
-  backdrop-filter:blur(10px);
-}
-
-.location-prompt p{
-  opacity:0.7;
-  font-size:14px;
-  margin-bottom:12px;
-}
-
-.location-prompt button{
-  background:rgba(255,255,255,.1);
-  border:1px solid rgba(255,255,255,.15);
-  color:#fff;
-  padding:8px 24px;
-  border-radius:20px;
-  cursor:pointer;
-  font-size:14px;
-  transition:all .3s;
-}
-
-.location-prompt button:hover{
-  background:rgba(255,255,255,.2);
-  transform:translateY(-1px);
-}
-
-.location-prompt button:disabled{
-  opacity:0.4;
-  cursor:not-allowed;
-}
-
-.notification{
-  position:fixed;
-  top:20px;
-  left:50%;
-  transform:translateX(-50%);
-  background:rgba(255,255,255,0.1);
-  backdrop-filter:blur(10px);
-  border:1px solid rgba(255,255,255,0.1);
-  padding:12px 24px;
-  border-radius:12px;
-  color:#fff;
-  font-size:14px;
-  z-index:1000;
-  animation:fadeIn 0.3s ease-out;
-  max-width:90%;
-  text-align:center;
-}
-
-.language-selector{
-  position:fixed;
-  top:20px;
-  right:20px;
-  z-index:100;
-  background:rgba(255,255,255,0.05);
-  backdrop-filter:blur(10px);
-  border:1px solid rgba(255,255,255,0.08);
-  border-radius:8px;
-  padding:4px;
-}
-
-.language-selector select{
-  background:transparent;
-  color:#fff;
-  border:none;
-  padding:8px 12px;
-  font-size:13px;
-  cursor:pointer;
-  outline:none;
-  border-radius:6px;
-  min-width:100px;
-}
-
-.language-selector select:hover{
-  background:rgba(255,255,255,0.1);
-}
-
-.language-selector select option{
-  background:#1a2233;
-  color:#fff;
-}
-
-.demo-badge{
-  position:fixed;
-  bottom:20px;
-  left:50%;
-  transform:translateX(-50%);
-  background:rgba(255,255,255,0.05);
-  backdrop-filter:blur(10px);
-  border:1px solid rgba(255,255,255,0.08);
-  padding:8px 16px;
-  border-radius:20px;
-  font-size:12px;
-  opacity:0.4;
-  z-index:100;
-}
-
-@media (max-width: 640px){
-  .container{
-    padding:20px;
-  }
-  
-  .time{
-    font-size:48px;
-    letter-spacing:-1px;
-  }
-  
-  .time-seconds{
-    font-size:18px;
-  }
-  
-  .top{
-    flex-direction:column;
-    gap:20px;
-  }
-  
-  .weather-card{
-    text-align:left;
-    width:100%;
-    padding:12px 16px;
-  }
-  
-  .weather-temp{
-    font-size:24px;
-  }
-  
-  .search input{
-    padding:14px 20px;
-    font-size:15px;
-  }
-  
-  .quote{
-    font-size:14px;
-    margin-top:30px;
-  }
-  
-  .footer{
-    flex-direction:column;
-    gap:4px;
-    font-size:11px;
-  }
-  
-  .location-prompt{
-    padding:12px 16px;
-  }
-  
-  .language-selector{
-    top:10px;
-    right:10px;
-    padding:2px;
-  }
-  
-  .language-selector select{
-    font-size:12px;
-    padding:4px 8px;
-    min-width:80px;
-  }
-  
-  .demo-badge{
-    font-size:10px;
-    padding:6px 12px;
-    bottom:10px;
-  }
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edge Homepage - 云端个人主页</title>
+    <style>
+        :root {
+            --bg-color: #0b0d14;
+            --text-color: #fff;
+            --card-bg: rgba(255,255,255,0.03);
+            --card-border: rgba(255,255,255,0.05);
+            --input-bg: rgba(255,255,255,0.06);
+            --input-border: rgba(255,255,255,0.08);
+            --link-color: rgba(255,255,255,0.4);
+            --link-hover: #fff;
+            --text-secondary: rgba(255,255,255,0.5);
+            --text-muted: rgba(255,255,255,0.3);
+            --gradient-text: linear-gradient(135deg, #fff 0%, #8899bb 100%);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        .bg {
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(circle at 20% 30%, #1a2233, transparent 60%),
+                        radial-gradient(circle at 80% 20%, #151a2a, transparent 60%),
+                        radial-gradient(circle at 50% 80%, #0f1420, transparent 50%),
+                        var(--bg-color);
+            z-index: -1;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1000px;
+            padding: 40px;
+            animation: fadeIn .6s ease-out;
+            position: relative;
+            z-index: 1;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 40px;
+            animation: slideUp .6s ease-out;
+        }
+        
+        .time-section {
+            position: relative;
+        }
+        
+        .time {
+            font-size: 72px;
+            font-weight: 700;
+            letter-spacing: -2px;
+            background: var(--gradient-text);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+            transition: all .5s;
+        }
+        
+        .time-seconds {
+            font-size: 24px;
+            opacity: 0.4;
+            margin-left: 8px;
+            -webkit-text-fill-color: var(--text-secondary);
+        }
+        
+        .date {
+            margin-top: 8px;
+            opacity: .5;
+            font-size: 16px;
+            letter-spacing: 1px;
+        }
+        
+        .weather-card {
+            text-align: right;
+            background: var(--card-bg);
+            padding: 12px 20px;
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--card-border);
+            min-width: 120px;
+            position: relative;
+            transition: all .3s;
+        }
+        
+        .weather-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+        
+        .weather-location {
+            font-size: 12px;
+            opacity: 0.5;
+            margin-bottom: 4px;
+            font-weight: 300;
+        }
+        
+        .weather-temp {
+            font-size: 28px;
+            font-weight: 600;
+        }
+        
+        .weather-icon {
+            font-size: 32px;
+            margin-right: 4px;
+            display: inline-block;
+            transition: transform .3s;
+        }
+        
+        .weather-icon:hover {
+            transform: scale(1.2) rotate(10deg);
+        }
+        
+        .weather-desc {
+            font-size: 13px;
+            opacity: .6;
+            margin-top: 4px;
+        }
+        
+        .weather-wind {
+            font-size: 12px;
+            opacity: .4;
+            margin-top: 2px;
+        }
+        
+        .location-status {
+            font-size: 11px;
+            opacity: 0.4;
+            margin-top: 4px;
+            cursor: help;
+        }
+        
+        .location-status .update-link {
+            color: var(--text-secondary);
+            text-decoration: underline;
+            cursor: pointer;
+        }
+        
+        .location-status .update-link:hover {
+            color: var(--link-hover);
+        }
+        
+        .search {
+            width: 100%;
+            margin: 30px 0 20px;
+            animation: slideUp .6s ease-out .1s both;
+        }
+        
+        .search input {
+            width: 100%;
+            padding: 18px 24px;
+            border-radius: 999px;
+            border: 1px solid var(--input-border);
+            background: var(--input-bg);
+            color: var(--text-color);
+            font-size: 16px;
+            outline: none;
+            transition: all .3s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        .search input::placeholder {
+            color: var(--text-muted);
+        }
+        
+        .search input:focus {
+            transform: translateY(-2px);
+            border-color: var(--link-hover);
+            box-shadow: 0 4px 20px rgba(0,0,0,.15);
+        }
+        
+        .search input:hover {
+            background: var(--card-bg);
+            border-color: var(--link-color);
+        }
+        
+        .search-history {
+            margin-top: 8px;
+            display: none;
+        }
+        
+        .search-history.show {
+            display: block;
+            animation: slideUp .3s ease-out;
+        }
+        
+        .search-history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+            padding: 0 2px;
+        }
+        
+        .search-history-header span {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+        
+        .search-history-header button {
+            background: none;
+            border: none;
+            color: rgba(255,255,255,.3);
+            font-size: 11px;
+            cursor: pointer;
+            padding: 2px 6px;
+            border-radius: 4px;
+            transition: all .2s;
+        }
+        
+        .search-history-header button:hover {
+            color: #ff6b6b;
+            background: rgba(255,107,107,.1);
+        }
+        
+        .search-history-item {
+            display: block;
+            width: 100%;
+            padding: 8px 12px;
+            border: none;
+            background: rgba(255,255,255,.04);
+            color: rgba(255,255,255,.5);
+            font-size: 14px;
+            text-align: left;
+            cursor: pointer;
+            border-radius: 6px;
+            margin-bottom: 2px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            transition: all .2s;
+        }
+        
+        .search-history-item:hover {
+            background: rgba(255,255,255,.1);
+            color: #fff;
+            transform: translateX(4px);
+        }
+        
+        .quick-links {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+        }
+        
+        .quick-links a {
+            color: var(--link-color);
+            text-decoration: none;
+            font-size: 13px;
+            transition: all .2s;
+            padding: 6px 12px;
+            border-radius: 20px;
+            background: rgba(255,255,255,.03);
+        }
+        
+        .quick-links a:hover {
+            color: var(--link-hover);
+            background: var(--card-bg);
+            transform: translateY(-2px);
+        }
+        
+        .quote {
+            margin-top: 50px;
+            padding: 20px 0;
+            border-top: 1px solid var(--card-border);
+            opacity: .7;
+            font-size: 16px;
+            line-height: 1.8;
+            transition: opacity .3s;
+            animation: slideUp .6s ease-out .2s both;
+        }
+        
+        .quote:hover {
+            opacity: .9;
+        }
+        
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 70px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1px solid var(--card-border);
+            background: var(--card-bg);
+            color: var(--text-secondary);
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+            z-index: 100;
+            transition: all .3s;
+        }
+        
+        .theme-toggle:hover {
+            color: var(--link-hover);
+            border-color: var(--link-hover);
+            transform: rotate(180deg);
+        }
+        
+        .quote-text {
+            font-style: italic;
+            letter-spacing: 0.5px;
+        }
+        
+        .quote-author {
+            display: block;
+            margin-top: 8px;
+            opacity: .5;
+            font-size: 14px;
+            font-style: normal;
+        }
+        
+        .footer {
+            margin-top: 60px;
+            color: var(--text-muted);
+            font-size: 12px;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding-top: 20px;
+            border-top: 1px solid var(--card-border);
+            animation: slideUp .6s ease-out .3s both;
+        }
+        
+        .footer span {
+            display: inline-block;
+            transition: all .3s;
+        }
+        
+        .footer span:hover {
+            color: var(--text-secondary);
+        }
+        
+        .location-prompt {
+            display: block;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin-bottom: 20px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            animation: slideUp .6s ease-out;
+        }
+        
+        .location-prompt p {
+            opacity: 0.7;
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+        
+        .location-prompt button {
+            background: rgba(255,255,255,.1);
+            border: 1px solid rgba(255,255,255,.15);
+            color: var(--text-color);
+            padding: 8px 24px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all .3s;
+        }
+        
+        .location-prompt button:hover {
+            background: rgba(255,255,255,.2);
+            transform: translateY(-1px);
+        }
+        
+        .location-prompt button:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--card-border);
+            padding: 12px 24px;
+            border-radius: 12px;
+            color: var(--text-color);
+            font-size: 14px;
+            z-index: 1000;
+            animation: fadeIn .3s ease-out;
+            max-width: 90%;
+            text-align: center;
+        }
+        
+        .user-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            position: fixed;
+            top: 20px;
+            right: 140px;
+            z-index: 100;
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 6px 16px 6px 12px;
+            transition: all .3s;
+        }
+        
+        .user-section:hover {
+            background: var(--card-bg);
+            border-color: var(--link-color);
+        }
+        
+        .user-avatar {
+            font-size: 20px;
+            line-height: 1;
+        }
+        
+        .user-name {
+            font-size: 13px;
+            color: var(--text-secondary);
+            max-width: 100px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .user-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 12px;
+            cursor: pointer;
+            padding: 2px 8px;
+            border-radius: 4px;
+            transition: all .2s;
+        }
+        
+        .user-btn:hover {
+            color: var(--link-hover);
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .language-selector {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 4px;
+            transition: all .3s;
+        }
+        
+        .language-selector select {
+            background: transparent;
+            color: var(--text-color);
+            border: none;
+            padding: 8px 12px;
+            font-size: 13px;
+            cursor: pointer;
+            outline: none;
+            border-radius: 6px;
+            min-width: 100px;
+        }
+        
+        .language-selector select:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .language-selector select option {
+            background: #1a2233;
+            color: #fff;
+        }
+        
+        @media (max-width: 640px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .time {
+                font-size: 48px;
+                letter-spacing: -1px;
+            }
+            
+            .time-seconds {
+                font-size: 18px;
+            }
+            
+            .top {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .weather-card {
+                text-align: left;
+                width: 100%;
+                padding: 12px 16px;
+            }
+            
+            .weather-temp {
+                font-size: 24px;
+            }
+            
+            .search input {
+                padding: 14px 20px;
+                font-size: 15px;
+            }
+            
+            .quote {
+                font-size: 14px;
+                margin-top: 30px;
+            }
+            
+            .footer {
+                flex-direction: column;
+                gap: 4px;
+                font-size: 11px;
+            }
+            
+            .location-prompt {
+                padding: 12px 16px;
+            }
+            
+            .language-selector {
+                top: 10px;
+                right: 10px;
+                padding: 2px;
+            }
+            
+            .language-selector select {
+                font-size: 12px;
+                padding: 4px 8px;
+                min-width: 80px;
+            }
+            
+            .theme-selector {
+                top: 60px;
+                right: 10px;
+            }
+            
+            .theme-selector select {
+                font-size: 11px;
+                padding: 4px 8px;
+                min-width: 70px;
+            }
+            
+            .theme-toggle {
+                top: 10px;
+                right: 60px;
+                width: 32px;
+                height: 32px;
+                font-size: 14px;
+            }
+            
+            .user-section {
+                top: 10px;
+                right: 110px;
+                padding: 4px 12px 4px 8px;
+            }
+            
+            .user-name {
+                font-size: 11px;
+                max-width: 60px;
+            }
+        }
+    </style>
 </head>
-
 <body>
-<div class="bg"></div>
-
-<!-- 语言选择器 -->
-<div class="language-selector">
-  <select id="languageSelect" onchange="changeLanguage(this.value)">
-    <option value="zh" selected>中文</option>
-    <option value="en">English</option>
-    <option value="ja">日本語</option>
-    <option value="ko">한국어</option>
-  </select>
-</div>
-
-<div class="container">
-  <div class="location-prompt" id="locationPrompt">
-    <p id="locationPromptText">📍 启用位置服务查看您所在城市的实时天气</p>
-    <button id="enableLocation" onclick="requestLocation()">
-      🌐 允许获取位置
-    </button>
-  </div>
-
-  <div class="top">
-    <div class="time-section">
-      <div class="time">
-        <span id="clockDisplay">--:--</span>
-        <span class="time-seconds" id="secondsDisplay">00</span>
-      </div>
-      <div class="date" id="dateDisplay">加载中...</div>
+    <button class="theme-toggle" id="themeToggle" title="切换主题">◐</button>
+    
+    <div class="user-section" id="userSection">
+        <span class="user-avatar">👤</span>
+        <span class="user-name" id="userName">访客</span>
+        <button class="user-btn" onclick="showLoginModal()">登录</button>
+    </div>
+    
+    <div class="bg"></div>
+    
+    <div class="language-selector">
+        <select id="languageSelect" onchange="changeLanguage(this.value)">
+            <option value="zh">中文</option>
+            <option value="en">English</option>
+            <option value="ja">日本語</option>
+            <option value="ko">한국어</option>
+        </select>
+    </div>
+    
+    <div class="container">
+        <div class="location-prompt" id="locationPrompt">
+            <p>📍 启用位置服务查看您所在城市的实时天气</p>
+            <button id="enableLocation" onclick="requestLocation()">🌐 允许获取位置</button>
+        </div>
+        
+        <div class="top">
+            <div class="time-section">
+                <div class="time"><span id="clockDisplay">--:--</span><span class="time-seconds" id="secondsDisplay">00</span></div>
+                <div class="date" id="dateDisplay">加载中...</div>
+            </div>
+            
+            <div class="weather-card">
+                <div class="weather-location">📍 东京</div>
+                <div><span class="weather-icon">☀️</span><span class="weather-temp">24°C</span></div>
+                <div class="weather-desc">晴朗</div>
+                <div class="weather-wind">💨 5 km/h</div>
+                <div class="location-status" id="locationStatus">📍 使用默认位置 · <span class="update-link" onclick="requestLocation()">更新位置</span></div>
+            </div>
+        </div>
+        
+        <div class="search">
+            <input id="search" type="text" placeholder="搜索... (Enter 键搜索)" autofocus aria-label="搜索... (Enter 键搜索)">
+            <div id="searchHistory" class="search-history">
+                <div class="search-history-header">
+                    <span>最近搜索</span>
+                    <button id="clearHistory">清除</button>
+                </div>
+            </div>
+            <div class="quick-links">
+                <a href="https://www.google.com" target="_blank">Google</a>
+                <a href="https://github.com" target="_blank">GitHub</a>
+                <a href="https://news.ycombinator.com" target="_blank">Hacker News</a>
+                <a href="https://www.reddit.com" target="_blank">Reddit</a>
+            </div>
+        </div>
+        
+        <div class="quote">
+            <span class="quote-text">“少即是多”</span>
+            <span class="quote-author">- 密斯·凡·德·罗</span>
+        </div>
+        
+        <div class="footer">
+            <span>📍 127.0.0.1</span>
+            <span>Tokyo Japan</span>
+            <span id="visitCounter" style="cursor:default;">👁 12345</span>
+            <span>⚡ Cloudflare Edge</span>
+        </div>
+    </div>
+    
+    <!-- 登录/注册模态框 -->
+    <div id="authModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(10px);z-index:1000;justify-content:center;align-items:center;">
+        <div style="background:var(--bg-color);border:1px solid var(--card-border);border-radius:20px;padding:40px;max-width:420px;width:90%;max-height:90vh;overflow-y:auto;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;">
+                <h2 id="authModalTitle" style="font-size:24px;font-weight:700;background:var(--gradient-text);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">登录</h2>
+                <button onclick="closeAuthModal()" style="background:none;border:none;color:var(--text-muted);font-size:24px;cursor:pointer;">×</button>
+            </div>
+            <div id="authForm">
+                <div class="form-group" style="margin-bottom:16px;">
+                    <label style="color:var(--text-secondary);font-size:13px;">用户名</label>
+                    <input id="authUsername" type="text" style="width:100%;padding:12px 16px;border-radius:12px;border:1px solid var(--input-border);background:var(--input-bg);color:var(--text-color);font-size:16px;outline:none;"/>
+                </div>
+                <div class="form-group" style="margin-bottom:16px;">
+                    <label style="color:var(--text-secondary);font-size:13px;">密码</label>
+                    <input id="authPassword" type="password" style="width:100%;padding:12px 16px;border-radius:12px;border:1px solid var(--input-border);background:var(--input-bg);color:var(--text-color);font-size:16px;outline:none;"/>
+                </div>
+                <div id="authEmailGroup" class="form-group" style="margin-bottom:16px;display:none;">
+                    <label style="color:var(--text-secondary);font-size:13px;">邮箱</label>
+                    <input id="authEmail" type="email" style="width:100%;padding:12px 16px;border-radius:12px;border:1px solid var(--input-border);background:var(--input-bg);color:var(--text-color);font-size:16px;outline:none;"/>
+                </div>
+                <div id="authDisplayNameGroup" class="form-group" style="margin-bottom:16px;display:none;">
+                    <label style="color:var(--text-secondary);font-size:13px;">显示名称</label>
+                    <input id="authDisplayName" type="text" style="width:100%;padding:12px 16px;border-radius:12px;border:1px solid var(--input-border);background:var(--input-bg);color:var(--text-color);font-size:16px;outline:none;"/>
+                </div>
+                <button id="authSubmitBtn" onclick="handleAuth()" style="width:100%;padding:14px;border-radius:12px;border:none;background:linear-gradient(135deg,#4a6fa5,#8899bb);color:#fff;font-size:16px;font-weight:600;cursor:pointer;transition:all .3s;">登录</button>
+                <p id="authSwitchText" style="margin-top:16px;text-align:center;color:var(--text-muted);font-size:13px;cursor:pointer;" onclick="toggleAuthMode()">注册</p>
+                <div id="authError" style="color:#ef4444;font-size:13px;margin-top:12px;display:none;text-align:center;"></div>
+            </div>
+        </div>
     </div>
 
-    <div class="weather-card">
-      <div class="weather-location" id="weatherLocation">📍 东京, 日本</div>
-      <div>
-        <span class="weather-icon" id="weatherIcon">🌤️</span>
-        <span class="weather-temp" id="weatherTemp">22°C</span>
-      </div>
-      <div class="weather-desc" id="weatherDesc">大部分晴朗</div>
-      <div class="weather-wind" id="weatherWind">💨 12 km/h</div>
-      <div class="location-status" id="locationStatus">
-        📍 使用默认位置 · <span class="update-link" onclick="requestLocation()">更新位置</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="search">
-    <input 
-      id="search" 
-      type="text" 
-      placeholder="搜索... (Enter 键搜索)"
-      autofocus
-      aria-label="搜索框"
-    />
-    <div class="quick-links">
-      <a href="https://www.google.com" target="_blank">Google</a>
-      <a href="https://github.com" target="_blank">GitHub</a>
-      <a href="https://news.ycombinator.com" target="_blank">Hacker News</a>
-      <a href="https://www.reddit.com" target="_blank">Reddit</a>
-    </div>
-  </div>
-
-  <div class="quote">
-    <span class="quote-text" id="quoteText">“少即是多”</span>
-    <span class="quote-author" id="quoteAuthor">- 密斯·凡·德·罗</span>
-  </div>
-
-  <div class="footer">
-    <span id="footerIP">📍 192.168.1.1</span>
-    <span id="footerLocation">北京 中国</span>
-    <span>⚡ Cloudflare Edge</span>
-  </div>
-</div>
-
-<div class="demo-badge">⚡ 静态演示 · 数据为模拟</div>
-
-<script>
-(function() {
-  'use strict';
-  
-  // ============================================
-  // 多语言数据
-  // ============================================
-  var i18n = {
-    zh: {
-      name: '中文',
-      weather: {
-        clear: '晴朗',
-        mostlyClear: '大部分晴朗',
-        partlyCloudy: '局部多云',
-        cloudy: '多云',
-        lightRain: '小雨',
-        moderateRain: '中雨',
-        heavyRain: '大雨',
-        thunderstorm: '雷暴'
-      },
-      ui: {
-        enableLocation: '📍 启用位置服务查看您所在城市的实时天气',
-        allowLocation: '🌐 允许获取位置',
-        gettingLocation: '⏳ 获取中...',
-        relocate: '🌐 重新定位',
-        locationUpdated: '✅ 位置已更新，天气数据已刷新',
-        locationFailed: '❌ 位置更新失败，请重试',
-        locationDenied: '用户拒绝了位置请求',
-        locationUnavailable: '位置信息不可用',
-        locationTimeout: '请求超时',
-        locationUnknown: '未知错误',
-        usingDefault: '📍 使用默认位置',
-        updateLocation: '更新位置',
-        located: '✅ 已定位',
-        precise: '✅ 已定位 (精确)',
-        searchPlaceholder: '搜索... (Enter 键搜索)'
-      },
-      quotes: [
-        { text: '少即是多', author: '密斯·凡·德·罗' },
-        { text: '保持饥饿，保持愚蠢', author: '史蒂夫·乔布斯' },
-        { text: '专注是最稀缺的资源', author: '未知' },
-        { text: '行动胜于计划', author: '执行力' },
-        { text: '简单是终极的复杂', author: '列奥纳多·达·芬奇' },
-        { text: '设计不是为了看起来简单，而是为了让事情变得简单', author: '未知' },
-        { text: '优秀的设计是显而易见的', author: '史蒂夫·乔布斯' },
-        { text: '少谈多做的时代已经来临', author: '未知' }
-      ],
-      locationUnknown: '未知位置'
-    },
-    en: {
-      name: 'English',
-      weather: {
-        clear: 'Clear',
-        mostlyClear: 'Mostly Clear',
-        partlyCloudy: 'Partly Cloudy',
-        cloudy: 'Cloudy',
-        lightRain: 'Light Rain',
-        moderateRain: 'Moderate Rain',
-        heavyRain: 'Heavy Rain',
-        thunderstorm: 'Thunderstorm'
-      },
-      ui: {
-        enableLocation: '📍 Enable location to see weather in your city',
-        allowLocation: '🌐 Allow Location',
-        gettingLocation: '⏳ Getting location...',
-        relocate: '🌐 Relocate',
-        locationUpdated: '✅ Location updated, weather data refreshed',
-        locationFailed: '❌ Location update failed, please retry',
-        locationDenied: 'User denied location request',
-        locationUnavailable: 'Location information unavailable',
-        locationTimeout: 'Request timeout',
-        locationUnknown: 'Unknown error',
-        usingDefault: '📍 Using default location',
-        updateLocation: 'Update location',
-        located: '✅ Located',
-        precise: '✅ Located (Precise)',
-        searchPlaceholder: 'Search... (Press Enter)'
-      },
-      quotes: [
-        { text: 'Less is more', author: 'Mies van der Rohe' },
-        { text: 'Stay hungry, stay foolish', author: 'Steve Jobs' },
-        { text: 'Focus is the scarcest resource', author: 'Unknown' },
-        { text: 'Action speaks louder than plans', author: 'Execution' },
-        { text: 'Simplicity is the ultimate sophistication', author: 'Leonardo da Vinci' },
-        { text: 'Design is not just what it looks like, but how it works', author: 'Unknown' },
-        { text: 'Good design is obvious', author: 'Steve Jobs' },
-        { text: 'The era of less talk, more action has arrived', author: 'Unknown' }
-      ],
-      locationUnknown: 'Unknown Location'
-    },
-    ja: {
-      name: '日本語',
-      weather: {
-        clear: '晴れ',
-        mostlyClear: 'ほぼ晴れ',
-        partlyCloudy: '一部曇り',
-        cloudy: '曇り',
-        lightRain: '小雨',
-        moderateRain: '中雨',
-        heavyRain: '大雨',
-        thunderstorm: '雷雨'
-      },
-      ui: {
-        enableLocation: '📍 位置情報を有効にして、あなたの都市の天気を確認する',
-        allowLocation: '🌐 位置情報を許可',
-        gettingLocation: '⏳ 取得中...',
-        relocate: '🌐 再取得',
-        locationUpdated: '✅ 位置が更新され、天気データが更新されました',
-        locationFailed: '❌ 位置の更新に失敗しました。再試行してください',
-        locationDenied: 'ユーザーが位置情報リクエストを拒否しました',
-        locationUnavailable: '位置情報が利用できません',
-        locationTimeout: 'リクエストがタイムアウトしました',
-        locationUnknown: '不明なエラー',
-        usingDefault: '📍 デフォルトの位置を使用',
-        updateLocation: '位置を更新',
-        located: '✅ 位置情報を取得済み',
-        precise: '✅ 位置情報を取得済み (精密)',
-        searchPlaceholder: '検索... (Enter キーで検索)'
-      },
-      quotes: [
-        { text: '少ないことはより多い', author: 'ミース・ファン・デル・ローエ' },
-        { text: 'ハングリーであれ、愚かであれ', author: 'スティーブ・ジョブズ' },
-        { text: '集中力は最も希少なリソース', author: '不明' },
-        { text: '行動は計画に勝る', author: '実行力' },
-        { text: 'シンプルさは究極の洗練', author: 'レオナルド・ダ・ヴィンチ' },
-        { text: 'デザインとは見た目だけでなく、どのように機能するか', author: '不明' },
-        { text: '優れたデザインは明らか', author: 'スティーブ・ジョブズ' },
-        { text: '語るより行動する時代が来た', author: '不明' }
-      ],
-      locationUnknown: '不明な場所'
-    },
-    ko: {
-      name: '한국어',
-      weather: {
-        clear: '맑음',
-        mostlyClear: '대부분 맑음',
-        partlyCloudy: '부분적으로 흐림',
-        cloudy: '흐림',
-        lightRain: '약한 비',
-        moderateRain: '중간 비',
-        heavyRain: '강한 비',
-        thunderstorm: '뇌우'
-      },
-      ui: {
-        enableLocation: '📍 위치 서비스를 활성화하여 해당 도시의 날씨 확인',
-        allowLocation: '🌐 위치 허용',
-        gettingLocation: '⏳ 가져오는 중...',
-        relocate: '🌐 위치 재설정',
-        locationUpdated: '✅ 위치가 업데이트되었으며 날씨 데이터가 새로 고침되었습니다',
-        locationFailed: '❌ 위치 업데이트 실패, 다시 시도하세요',
-        locationDenied: '사용자가 위치 요청을 거부했습니다',
-        locationUnavailable: '위치 정보를 사용할 수 없음',
-        locationTimeout: '요청 시간 초과',
-        locationUnknown: '알 수 없는 오류',
-        usingDefault: '📍 기본 위치 사용',
-        updateLocation: '위치 업데이트',
-        located: '✅ 위치 확인됨',
-        precise: '✅ 위치 확인됨 (정밀)',
-        searchPlaceholder: '검색... (Enter 키로 검색)'
-      },
-      quotes: [
-        { text: '적을수록 더 많다', author: '미스 반 데어 로에' },
-        { text: '굶주리고 어리석게 살아라', author: '스티브 잡스' },
-        { text: '집중력은 가장 희귀한 자원이다', author: '알 수 없음' },
-        { text: '행동이 계획보다 낫다', author: '실행력' },
-        { text: '단순함은 궁극의 정교함이다', author: '레오나르도 다 빈치' },
-        { text: '디자인은 보이는 것뿐만 아니라 작동 방식이다', author: '알 수 없음' },
-        { text: '좋은 디자인은 명백하다', author: '스티브 잡스' },
-        { text: '말보다 행동의 시대가 왔다', author: '알 수 없음' }
-      ],
-      locationUnknown: '알 수 없는 위치'
-    }
-  };
-
-  var currentLang = 'zh';
-  var currentQuoteIndex = 0;
-
-  // ============================================
-  // 天气数据（模拟）
-  // ============================================
-  var weatherData = {
-    'zh': { icon: '🌤️', temp: '22°C', desc: '大部分晴朗', wind: '12 km/h', location: '📍 东京, 日本' },
-    'en': { icon: '🌤️', temp: '22°C', desc: 'Mostly Clear', wind: '12 km/h', location: '📍 Tokyo, Japan' },
-    'ja': { icon: '🌤️', temp: '22°C', desc: 'ほぼ晴れ', wind: '12 km/h', location: '📍 東京, 日本' },
-    'ko': { icon: '🌤️', temp: '22°C', desc: '대부분 맑음', wind: '12 km/h', location: '📍 도쿄, 일본' }
-  };
-
-  // ============================================
-  // IP 数据（模拟）
-  // ============================================
-  var ipData = {
-    'zh': { ip: '192.168.1.1', location: '北京 中国' },
-    'en': { ip: '192.168.1.1', location: 'Beijing, China' },
-    'ja': { ip: '192.168.1.1', location: '北京, 中国' },
-    'ko': { ip: '192.168.1.1', location: '베이징, 중국' }
-  };
-
-  // ============================================
-  // 语言切换
-  // ============================================
-  window.changeLanguage = function(lang) {
-    currentLang = lang;
-    updateUI(lang);
-    showNotification(i18n[lang].ui.locationUpdated);
-  };
-
-  // ============================================
-  // 更新 UI
-  // ============================================
-  function updateUI(lang) {
-    var t = i18n[lang];
-    var weather = weatherData[lang] || weatherData['zh'];
-    var ip = ipData[lang] || ipData['zh'];
-    
-    // 更新位置提示
-    document.getElementById('locationPromptText').textContent = t.ui.enableLocation;
-    
-    // 更新按钮文字
-    var btn = document.getElementById('enableLocation');
-    if (!btn._isLoading) {
-      btn.textContent = t.ui.allowLocation;
-    }
-    
-    // 更新天气
-    document.getElementById('weatherIcon').textContent = weather.icon;
-    document.getElementById('weatherTemp').textContent = weather.temp;
-    document.getElementById('weatherDesc').textContent = weather.desc;
-    document.getElementById('weatherWind').textContent = '💨 ' + weather.wind;
-    document.getElementById('weatherLocation').textContent = weather.location;
-    
-    // 更新名言
-    var quotes = t.quotes;
-    var quote = quotes[Math.floor(Math.random() * quotes.length)];
-    document.getElementById('quoteText').textContent = '“' + quote.text + '”';
-    document.getElementById('quoteAuthor').textContent = '- ' + quote.author;
-    
-    // 更新位置状态
-    document.getElementById('locationStatus').innerHTML = 
-      t.ui.usingDefault + ' · <span class="update-link" onclick="requestLocation()">' + t.ui.updateLocation + '</span>';
-    
-    // 更新搜索框
-    document.getElementById('search').placeholder = t.ui.searchPlaceholder;
-    
-    // 更新页脚
-    document.getElementById('footerIP').textContent = '📍 ' + ip.ip;
-    document.getElementById('footerLocation').textContent = ip.location;
-    
-    // 更新日期格式
-    updateClock();
-  }
-
-  // ============================================
-  // 位置请求（模拟）
-  // ============================================
-  window.requestLocation = function() {
-    var button = document.getElementById('enableLocation');
-    var t = i18n[currentLang];
-    
-    button._isLoading = true;
-    button.disabled = true;
-    button.textContent = t.ui.gettingLocation;
-    
-    // 模拟定位请求
-    setTimeout(function() {
-      // 模拟成功
-      var weather = {
-        'zh': { icon: '☀️', temp: '28°C', desc: '晴朗', wind: '8 km/h', location: '📍 上海, 中国' },
-        'en': { icon: '☀️', temp: '28°C', desc: 'Clear', wind: '8 km/h', location: '📍 Shanghai, China' },
-        'ja': { icon: '☀️', temp: '28°C', desc: '晴れ', wind: '8 km/h', location: '📍 上海, 中国' },
-        'ko': { icon: '☀️', temp: '28°C', desc: '맑음', wind: '8 km/h', location: '📍 상하이, 중국' }
-      };
-      
-      weatherData[currentLang] = weather[currentLang] || weather['zh'];
-      
-      // 更新天气显示
-      var w = weatherData[currentLang];
-      document.getElementById('weatherIcon').textContent = w.icon;
-      document.getElementById('weatherTemp').textContent = w.temp;
-      document.getElementById('weatherDesc').textContent = w.desc;
-      document.getElementById('weatherWind').textContent = '💨 ' + w.wind;
-      document.getElementById('weatherLocation').textContent = w.location;
-      
-      // 隐藏位置提示
-      document.getElementById('locationPrompt').style.display = 'none';
-      
-      // 更新状态
-      document.getElementById('locationStatus').innerHTML = '✅ ' + t.ui.precise;
-      document.getElementById('locationStatus').style.opacity = '0.6';
-      
-      showNotification(t.ui.locationUpdated);
-      
-      button._isLoading = false;
-      button.disabled = false;
-      button.textContent = t.ui.relocate;
-    }, 1500);
-  };
-
-  // ============================================
-  // 通知
-  // ============================================
-  function showNotification(message) {
-    var existing = document.querySelector('.notification');
-    if (existing) {
-      existing.remove();
-    }
-    
-    var notification = document.createElement('div');
-    notification.className = 'notification';
-    notification.textContent = message;
-    document.body.appendChild(notification);
-    
-    setTimeout(function() {
-      notification.style.opacity = '0';
-      notification.style.transition = 'opacity 0.5s';
-      setTimeout(function() { notification.remove(); }, 500);
-    }, 3000);
-  }
-
-  // ============================================
-  // 实时时钟（用户本地时区）
-  // ============================================
-  function updateClock() {
-    var clockEl = document.getElementById('clockDisplay');
-    var secondsEl = document.getElementById('secondsDisplay');
-    var dateEl = document.getElementById('dateDisplay');
-    if (!clockEl) return;
-    
-    var d = new Date();
-    var h = String(d.getHours()).padStart(2, '0');
-    var m = String(d.getMinutes()).padStart(2, '0');
-    var s = String(d.getSeconds()).padStart(2, '0');
-    
-    clockEl.textContent = h + ':' + m;
-    secondsEl.textContent = s;
-    
-    var langMap = {
-      'zh': 'zh-CN',
-      'en': 'en-US',
-      'ja': 'ja-JP',
-      'ko': 'ko-KR'
-    };
-    
-    dateEl.textContent = d.toLocaleDateString(
-      langMap[currentLang] || 'zh-CN',
-      {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        weekday: 'long'
-      }
-    );
-  }
-
-  // ============================================
-  // 搜索功能
-  // ============================================
-  var searchInput = document.getElementById('search');
-  if (searchInput) {
-    searchInput.addEventListener('keydown', function(e) {
-      if (e.key === 'Enter' && this.value.trim()) {
-        var query = encodeURIComponent(this.value.trim());
-        window.open('https://www.google.com/search?q=' + query, '_blank');
-        this.value = '';
-      }
-    });
-    
-    if (document.activeElement === document.body) {
-      setTimeout(function() { searchInput.focus(); }, 100);
-    }
-  }
-
-  // ============================================
-  // 键盘快捷键
-  // ============================================
-  document.addEventListener('keydown', function(e) {
-    if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
-      e.preventDefault();
-      var search = document.getElementById('search');
-      if (search) search.focus();
-    }
-    if (e.key === 'Escape') {
-      var search = document.getElementById('search');
-      if (search && document.activeElement === search) {
-        search.value = '';
-        search.blur();
-      }
-    }
-  });
-
-  // ============================================
-  // 初始化
-  // ============================================
-  updateClock();
-  setInterval(updateClock, 1000);
-  
-  // 检测浏览器语言
-  var browserLang = navigator.language || navigator.languages?.[0] || 'zh';
-  var langMap = {
-    'zh': 'zh',
-    'zh-CN': 'zh',
-    'zh-TW': 'zh',
-    'en': 'en',
-    'en-US': 'en',
-    'ja': 'ja',
-    'ja-JP': 'ja',
-    'ko': 'ko',
-    'ko-KR': 'ko'
-  };
-  var detectedLang = langMap[browserLang] || 'zh';
-  document.getElementById('languageSelect').value = detectedLang;
-  currentLang = detectedLang;
-  updateUI(detectedLang);
-  
-  console.log('⚡ Edge Home - Static Demo');
-  console.log('🌐 Language: ' + i18n[currentLang].name);
-  console.log('🕐 Local timezone: ' + Intl.DateTimeFormat().resolvedOptions().timeZone);
-  console.log('⌨️  Ctrl+K / Cmd+K Quick Search');
-  console.log('💡 这是一个静态演示页面，所有数据均为模拟');
-})();
-</script>
-
+    <script>
+        // 模拟数据
+        const mockWeatherData = {
+            temp: "24°C",
+            desc: "晴朗",
+            icon: "☀️",
+            windspeed: 5,
+            location: "东京"
+        };
+        
+        const mockQuote = {
+            text: "少即是多",
+            author: "密斯·凡·德·罗"
+        };
+        
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            updateClock();
+            setInterval(updateClock, 1000);
+            
+            // 设置日期
+            const dateOptions = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
+            const date = new Date().toLocaleDateString('zh-CN', dateOptions);
+            document.getElementById('dateDisplay').textContent = date;
+            
+            // 模拟访问计数
+            document.getElementById('visitCounter').textContent = '👁 ' + Math.floor(Math.random() * 10000 + 5000);
+            
+            // 搜索功能
+            setupSearchFunctionality();
+            
+            // 主题切换
+            setupThemeToggle();
+            
+            // 模拟加载动画
+            setTimeout(() => {
+                document.querySelector('.time').style.transform = 'translateY(0)';
+                document.querySelector('.weather-card').style.transform = 'translateY(0)';
+            }, 300);
+        });
+        
+        // 时钟更新
+        function updateClock() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            
+            document.getElementById('clockDisplay').textContent = `${hours}:${minutes}`;
+            document.getElementById('secondsDisplay').textContent = seconds;
+        }
+        
+        // 搜索功能
+        function setupSearchFunctionality() {
+            const searchInput = document.getElementById('search');
+            const searchHistory = document.getElementById('searchHistory');
+            const STORAGE_KEY = 'search_history';
+            const MAX_HISTORY = 10;
+            
+            function loadHistory() {
+                try {
+                    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+                } catch(_) {
+                    return [];
+                }
+            }
+            
+            function saveHistory(query) {
+                let history = loadHistory();
+                history = history.filter(item => item !== query);
+                history.unshift(query);
+                if(history.length > MAX_HISTORY) history = history.slice(0, MAX_HISTORY);
+                try {
+                    localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
+                } catch(_) {}
+                return history;
+            }
+            
+            function renderHistory(history) {
+                const container = document.getElementById('searchHistory');
+                if(!container) return;
+                
+                const header = container.querySelector('.search-history-header');
+                container.innerHTML = '';
+                if(header) container.appendChild(header);
+                
+                if(history.length === 0) {
+                    container.classList.remove('show');
+                    return;
+                }
+                
+                for(let i = 0; i < history.length; i++) {
+                    const btn = document.createElement('button');
+                    btn.className = 'search-history-item';
+                    btn.textContent = history[i];
+                    btn.addEventListener('click', function() {
+                        const q = encodeURIComponent(this.textContent);
+                        window.open('https://www.google.com/search?q=' + q, '_blank');
+                        document.getElementById('search').value = '';
+                        container.classList.remove('show');
+                    });
+                    container.appendChild(btn);
+                }
+                container.classList.add('show');
+            }
+            
+            function doSearch(query) {
+                const q = encodeURIComponent(query);
+                window.open('https://www.google.com/search?q=' + q, '_blank');
+                const history = saveHistory(query);
+                renderHistory(history);
+            }
+            
+            searchInput.addEventListener('keydown', function(e) {
+                const val = this.value.trim();
+                if(e.key === 'Enter' && val) {
+                    doSearch(val);
+                    this.value = '';
+                    document.getElementById('searchHistory').classList.remove('show');
+                }
+            });
+            
+            searchInput.addEventListener('focus', function() {
+                const history = loadHistory();
+                if(history.length > 0) renderHistory(history);
+            });
+            
+            searchInput.addEventListener('blur', function() {
+                setTimeout(() => {
+                    document.getElementById('searchHistory').classList.remove('show');
+                }, 200);
+            });
+            
+            document.getElementById('clearHistory').addEventListener('click', function() {
+                try {
+                    localStorage.removeItem(STORAGE_KEY);
+                } catch(_) {}
+                document.getElementById('searchHistory').classList.remove('show');
+            });
+        }
+        
+        // 主题切换
+        function setupThemeToggle() {
+            const themeToggle = document.getElementById('themeToggle');
+            const html = document.documentElement;
+            
+            function setTheme(theme) {
+                html.setAttribute('data-theme', theme);
+                document.cookie = `theme=${theme}; path=/; max-age=31536000; samesite=lax; Secure`;
+                themeToggle.textContent = theme === 'light' ? '◑' : '◐';
+            }
+            
+            themeToggle.addEventListener('click', function() {
+                const current = html.getAttribute('data-theme') || 'dark';
+                const themes = ['dark', 'light', 'ocean', 'forest', 'sunset', 'neon'];
+                const idx = themes.indexOf(current);
+                const next = themes[(idx + 1) % themes.length];
+                setTheme(next);
+            });
+        }
+        
+        // 显示通知
+        function showNotification(message) {
+            const existing = document.querySelector('.notification');
+            if(existing) existing.remove();
+            
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transition = 'opacity 0.5s';
+                setTimeout(() => {
+                    notification.remove();
+                }, 500);
+            }, 3000);
+        }
+        
+        // 位置请求
+        function requestLocation() {
+            const button = document.getElementById('enableLocation');
+            const t = { ui: { gettingLocation: '⏳ 获取中...', relocate: '🌐 重新定位', allowLocation: '🌐 允许获取位置' } };
+            
+            if(button) {
+                button.disabled = true;
+                button.textContent = t.ui.gettingLocation;
+            }
+            
+            // 模拟位置获取
+            setTimeout(() => {
+                if(button) {
+                    button.disabled = false;
+                    button.textContent = t.ui.relocate;
+                }
+                
+                // 更新天气信息
+                document.querySelector('.weather-temp').textContent = '26°C';
+                document.querySelector('.weather-desc').textContent = '多云转晴';
+                document.querySelector('.weather-icon').textContent = '⛅';
+                document.getElementById('locationStatus').innerHTML = '✅ 已定位 (精确)';
+                
+                // 隐藏位置提示
+                document.getElementById('locationPrompt').style.display = 'none';
+                
+                showNotification('✅ 位置已更新，天气数据已刷新');
+            }, 2000);
+        }
+        
+        // 认证相关函数
+        function showLoginModal() {
+            document.getElementById('authModal').style.display = 'flex';
+            document.getElementById('authUsername').focus();
+        }
+        
+        function closeAuthModal() {
+            document.getElementById('authModal').style.display = 'none';
+            document.getElementById('authError').style.display = 'none';
+        }
+        
+        function toggleAuthMode() {
+            const isLoginMode = document.getElementById('authSubmitBtn').textContent === '登录';
+            
+            if(isLoginMode) {
+                // 切换到注册模式
+                document.getElementById('authModalTitle').textContent = '注册';
+                document.getElementById('authSubmitBtn').textContent = '注册';
+                document.getElementById('authSwitchText').textContent = '登录';
+                document.getElementById('authEmailGroup').style.display = 'block';
+                document.getElementById('authDisplayNameGroup').style.display = 'block';
+            } else {
+                // 切换到登录模式
+                document.getElementById('authModalTitle').textContent = '登录';
+                document.getElementById('authSubmitBtn').textContent = '登录';
+                document.getElementById('authSwitchText').textContent = '注册';
+                document.getElementById('authEmailGroup').style.display = 'none';
+                document.getElementById('authDisplayNameGroup').style.display = 'none';
+            }
+            document.getElementById('authError').style.display = 'none';
+        }
+        
+        function handleAuth() {
+            const username = document.getElementById('authUsername').value.trim();
+            const password = document.getElementById('authPassword').value;
+            const isLoginMode = document.getElementById('authSubmitBtn').textContent === '登录';
+            
+            if(!username || !password) {
+                document.getElementById('authError').textContent = '❌ 用户名和密码为必填项';
+                document.getElementById('authError').style.display = 'block';
+                return;
+            }
+            
+            const btn = document.getElementById('authSubmitBtn');
+            btn.disabled = true;
+            btn.textContent = '⏳ ...';
+            document.getElementById('authError').style.display = 'none';
+            
+            // 模拟认证过程
+            setTimeout(() => {
+                if(isLoginMode) {
+                    document.getElementById('userName').textContent = username;
+                    showNotification('✅ 欢迎回来，' + username);
+                } else {
+                    showNotification('✅ 注册成功，请登录');
+                    toggleAuthMode();
+                }
+                
+                btn.disabled = false;
+                btn.textContent = isLoginMode ? '登录' : '注册';
+                closeAuthModal();
+            }, 1500);
+        }
+        
+        // 语言切换
+        function changeLanguage(lang) {
+            const select = document.getElementById('languageSelect');
+            if(select) select.disabled = true;
+            
+            const msgs = {
+                zh: '⏳ 切换语言中...',
+                en: '⏳ Switching language...',
+                ja: '⏳ 言語を切り替え中...',
+                ko: '⏳ 언어 전환 중...'
+            };
+            
+            showNotification(msgs[lang] || msgs.en);
+            
+            // 模拟语言切换
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000);
+        }
+    </script>
 </body>
 </html>
